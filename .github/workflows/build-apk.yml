@@ -1,0 +1,48 @@
+ name: Build Deutsch APK
+
+  on:
+    push:
+      paths:
+        - 'deutsch-app/**'
+        - 'verben/**'
+        - '.github/workflows/build-apk.yml'
+    workflow_dispatch:
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+        - name: Set up Node 20
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+            cache: 'npm'
+            cache-dependency-path: deutsch-app/package-lock.json
+        - name: Setup Gradle
+          uses: gradle/actions/setup-gradle@v4
+        - name: Setup Android SDK
+          uses: android-actions/setup-android@v3
+        - name: Install npm deps
+          working-directory: deutsch-app
+          run: npm ci
+        - name: Sync web assets into Android project
+          working-directory: deutsch-app
+          run: npm run cap:sync
+        - name: Make gradlew executable
+          working-directory: deutsch-app/android
+          run: chmod +x gradlew
+        - name: Build debug APK
+          working-directory: deutsch-app/android
+          run: ./gradlew assembleDebug
+        - name: Upload APK
+          uses: actions/upload-artifact@v4
+          with:
+            name: Deutsch-debug-apk
+            path: deutsch-app/android/app/build/outputs/apk/debug/app-debug.apk
+            retention-days: 30
