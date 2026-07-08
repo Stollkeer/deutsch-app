@@ -1,0 +1,31 @@
+# Node
+deutsch-app/node_modules/
+deutsch-app/www/
+
+# Gradle / Android build
+deutsch-app/android/.gradle/
+deutsch-app/android/build/
+deutsch-app/android/app/build/
+deutsch-app/android/app/release/
+deutsch-app/android/local.properties
+deutsch-app/android/captures/
+deutsch-app/android/.idea/
+deutsch-app/android/app/src/main/assets/public/
+
+# Python cache from verben/ dev scripts
+verben/__pycache__/
+*.pyc
+
+# Old artefacts (Bubblewrap attempt, exports)
+bubblewrap-build/
+verben-pwa.zip
+verben-index.html
+phone-*.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code / MCP session data
+.claude/
+.playwright-mcp/

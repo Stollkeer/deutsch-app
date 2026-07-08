@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#131420" />
+<title>Deutsch — 120 verbs + 1000 nouns</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style>
+:root{
+  --ink:#131420; --ink2:#0d0e17; --panel:#1c1e2c; --panel2:#252838; --line:#30344a;
+  --paper:#f3eee1; --paper2:#e9e2d1; --paper-ink:#1a1b24;
+  --amber:#ffb020; --amber-deep:#f59e0b;
+  --teal:#3dd7c2; --teal-deep:#22b3a0;
+  --ok:#34c98a; --bad:#ff5d5d; --boss:#a374ff; --boss-deep:#7c4dff;
+  --der:#5aa9ff; --die:#ff7aa8; --das:#3dd7c2;
+  --text:#edeef5; --muted:#969cb3; --muted2:#6f7590;
+  --mono: ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --sans: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --accent:var(--amber); --accent-deep:var(--amber-deep);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans); color:var(--text); background:var(--ink);
+  background-image:
+    radial-gradient(1100px 620px at 82% -12%, rgba(255,176,32,.10), transparent 60%),
+    radial-gradient(900px 560px at -10% 108%, rgba(163,116,255,.10), transparent 62%);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  min-height:100dvh;
+}
+body.boss{ --accent:var(--boss); --accent-deep:var(--boss-deep); }
+body.nouns{ --accent:var(--teal); --accent-deep:var(--teal-deep); }
+body.nouns.boss{ --accent:var(--boss); --accent-deep:var(--boss-deep); }
+.wrap{max-width:600px;margin:0 auto;padding:22px 18px calc(28px + env(safe-area-inset-bottom));min-height:100dvh;display:flex;flex-direction:column}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+
+.screen{display:none;flex:1;flex-direction:column;animation:fade .35s ease}
+.screen.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px;min-height:34px}
+.back{font-family:var(--mono);font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;padding:7px 4px}
+.back:hover{color:var(--text)}
+.topbar .spacer{flex:1}
+.topbar .crumb{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2)}
+
+.brand{margin:6px 0 18px}
+.brand .kicker{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dot{width:9px;height:9px;border-radius:2px;background:var(--accent);box-shadow:0 0 16px currentColor;color:var(--accent)}
+.brand h1{font-size:clamp(2.6rem,15vw,4rem);font-weight:800;line-height:.9;letter-spacing:-.035em}
+.brand h1 em{font-style:normal;color:var(--accent)}
+.brand p{margin-top:14px;color:var(--muted);max-width:36ch;font-size:14.5px;line-height:1.55}
+
+/* rank / journey */
+.rank{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:16px 0 8px;position:relative;overflow:hidden}
+.rank::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 180px at 90% -10%,rgba(255,176,32,.14),transparent 60%);pointer-events:none}
+.rank .row{display:flex;justify-content:space-between;align-items:baseline;position:relative}
+.rank .title{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)}
+.rank .name{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-top:4px;color:var(--text)}
+.rank .name em{font-style:normal;background:linear-gradient(90deg,var(--amber),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.rank .xp{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
+.rank .xp b{color:var(--text);font-weight:700}
+.rank .bar{height:8px;background:rgba(0,0,0,.28);border-radius:99px;overflow:hidden;margin-top:12px}
+.rank .bar div{height:100%;background:linear-gradient(90deg,var(--amber),var(--teal),var(--boss));border-radius:99px;transition:width .5s ease-out;box-shadow:0 0 12px rgba(255,176,32,.35)}
+.rank .next{font-family:var(--mono);font-size:11px;color:var(--muted2);margin-top:8px}
+.rank .next b{color:var(--text);font-weight:600}
+
+.tracks{display:flex;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px;margin:8px 0 6px}
+.tracks button{flex:1;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:11px 8px;border-radius:9px;font-weight:700;transition:.15s}
+.tracks button.on{background:var(--accent);color:#231800}
+body.nouns .tracks button.on{color:#062018}
+body.boss .tracks button.on{color:#150a2e}
+.tracks button:not(.on):hover{color:var(--text)}
+.tracks button .cnt{font-size:10px;opacity:.7;margin-left:5px}
+
+.stats{display:flex;gap:10px;margin:16px 0 20px}
+.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 12px}
+.stat .num{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1}
+.stat .num small{font-size:.75rem;color:var(--muted2);font-weight:600}
+.stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-top:7px}
+.stat.beaten .num{color:var(--boss)}
+
+.modes{display:flex;flex-direction:column;gap:12px}
+.mode{display:flex;align-items:center;gap:16px;text-align:left;width:100%;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px 18px;transition:border-color .18s,transform .05s,background .18s}
+.mode:hover{border-color:var(--muted2)}
+.mode:active{transform:scale(.99)}
+.mode .idx{font-family:var(--mono);font-size:12px;color:var(--muted2);width:22px}
+.mode .body{flex:1}
+.mode .body .t{font-size:1.18rem;font-weight:750;letter-spacing:-.01em}
+.mode .body .d{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.4}
+.mode .arw{color:var(--muted2);font-size:20px;transition:transform .18s,color .18s}
+.mode:hover .arw{transform:translateX(4px);color:var(--text)}
+.mode.ultimate{background:linear-gradient(120deg,rgba(163,116,255,.14),rgba(124,77,255,.05));border-color:rgba(163,116,255,.4)}
+.mode.ultimate .body .t{color:#d9c6ff}
+.mode.ultimate .medal{margin-left:2px;color:var(--boss);font-size:14px}
+.foot-link{margin-top:22px;text-align:center;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.foot-link button{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-decoration:underline;text-underline-offset:4px}
+.foot-link button:hover{color:var(--text)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-weight:700;font-size:15px;border-radius:13px;padding:15px 20px;transition:transform .05s,filter .18s,background .18s;width:100%}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--accent);color:#231800}
+body.nouns .btn-primary{color:#062018}
+body.boss .btn-primary{color:#150a2e}
+.btn-primary:hover{filter:brightness(1.06)}
+.btn-ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--muted2)}
+.btn-row{display:flex;gap:10px}
+.btn-sm{padding:11px 14px;font-size:13px;border-radius:11px;width:auto}
+
+.field-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin:22px 0 10px}
+.seg{display:flex;gap:7px;flex-wrap:wrap}
+.seg button, .chip{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted);
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 13px;transition:.15s}
+.seg button.on,.chip.on{background:var(--accent);color:#231800;border-color:transparent;font-weight:700}
+body.nouns .seg button.on,body.nouns .chip.on{color:#062018}
+body.boss .seg button.on,body.boss .chip.on{color:#150a2e}
+.seg button:not(.on):hover,.chip:not(.on):hover{border-color:var(--muted2);color:var(--text)}
+.chip .mast{display:block;font-size:9.5px;letter-spacing:.14em;color:var(--muted2);margin-top:2px;font-weight:500}
+.chip.on .mast{color:rgba(0,0,0,.5)}
+.chip.done{border-color:var(--ok);color:var(--ok)}
+.chip.done .mast{color:var(--ok)}
+.chip.on.done{background:var(--ok);color:#032018;border-color:transparent}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.lvlgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px}
+.lvlgrid button, .lvlgrid .chip{padding:9px 6px;text-align:center;font-size:12px;line-height:1.15}
+
+.deckbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px}
+.counter{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.counter b{color:var(--text)}
+.flip{perspective:1400px;flex:1;min-height:320px;margin:6px 0 18px}
+.flip-inner{position:relative;width:100%;height:100%;min-height:320px;transition:transform .55s cubic-bezier(.4,.15,.2,1);transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:22px;display:flex;flex-direction:column;overflow:hidden}
+.face.front{background:linear-gradient(160deg,var(--paper),var(--paper2));color:var(--paper-ink);
+  box-shadow:0 24px 60px -24px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.6)}
+.face.back{background:var(--panel);border:1px solid var(--line);transform:rotateY(180deg);
+  box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+.face .tag{position:absolute;top:16px;left:18px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.front .tag{color:rgba(26,27,36,.4)}
+.front .lvl{position:absolute;top:16px;right:18px;font-family:var(--mono);font-size:11px;color:rgba(26,27,36,.4)}
+.front .verb{margin:auto;font-size:clamp(1.7rem,9vw,3.6rem);font-weight:800;letter-spacing:-.03em;padding:0 20px;text-align:center;overflow-wrap:anywhere;hyphens:auto;max-width:100%}
+.front .verb .art{display:block;font-size:.42em;font-weight:600;letter-spacing:.02em;opacity:.75;margin-bottom:4px}
+.front .verb.der .art{color:#3c76c9} .front .verb.die .art{color:#c04378} .front .verb.das .art{color:#1c8e7d}
+.front .plural{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:13px;color:rgba(26,27,36,.55)}
+.front .hint{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(26,27,36,.42)}
+.front .badge{position:absolute;top:16px;right:18px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ok);font-weight:700}
+.back .tag{color:var(--muted2)}
+.back .trans{margin:auto;width:100%;padding:26px 26px;display:flex;flex-direction:column;gap:2px}
+.trow{display:flex;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.trow:last-child{border-bottom:none}
+.trow .lg{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--accent);width:34px;flex-shrink:0}
+.trow .w{font-size:1.22rem;font-weight:650;letter-spacing:-.01em}
+.trow .w .alt{color:var(--muted);font-weight:500;font-size:.95rem}
+.trow.pl{padding:9px 0}
+.trow.pl .w{font-size:1rem;color:var(--muted);font-weight:600}
+.flip-ctrls{display:flex;gap:10px}
+.flip-ctrls .btn{flex:1}
+.nav-ic{width:52px;flex:0 0 52px}
+
+.progress{height:8px;background:var(--panel);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progress .bar{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .4s}
+.playmeta{display:flex;align-items:center;justify-content:space-between;margin:12px 0 0;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.playmeta .streak{color:var(--accent)}
+.playmeta .streak.zero{color:var(--muted2)}
+.qcard{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:18px 0}
+.q-ask{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.q-ask b{color:var(--accent)}
+.q-verb{font-size:clamp(1.7rem,9vw,3.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin-bottom:8px;overflow-wrap:anywhere;hyphens:auto;max-width:100%}
+.q-verb .art{display:block;font-size:.32em;font-weight:600;color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+.q-sub{font-family:var(--mono);font-size:12px;color:var(--muted2);margin-bottom:24px}
+.answer{width:100%;font-size:17px;text-align:center;color:var(--text);background:var(--panel);
+  border:1.5px solid var(--line);border-radius:14px;padding:16px 16px;outline:none;transition:border-color .15s}
+.answer:focus{border-color:var(--accent)}
+.answer::placeholder{color:var(--muted2)}
+.answer.ok{border-color:var(--ok);background:rgba(52,201,138,.08)}
+.answer.bad{border-color:var(--bad);background:rgba(255,93,93,.08)}
+.feedback{min-height:44px;margin:14px 0 4px;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center}
+.feedback .r-ok{color:var(--ok);font-weight:700}
+.feedback .r-bad{color:var(--bad);font-weight:700}
+.feedback .correct{color:var(--text)}
+.feedback .correct b{color:var(--accent)}
+.feedback .allt{color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.play-actions{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.linkbtn{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:8px}
+.linkbtn:hover{color:var(--text)}
+
+.art-choice{display:flex;gap:10px;margin-top:14px}
+.art-choice button{flex:1;padding:18px 8px;font-size:1.15rem;font-weight:700;letter-spacing:.02em;
+  background:var(--panel);border:1.5px solid var(--line);border-radius:14px;color:var(--text);transition:.15s}
+.art-choice button:hover{border-color:var(--muted2)}
+.art-choice button.der{border-color:rgba(90,169,255,.35);color:var(--der)}
+.art-choice button.die{border-color:rgba(255,122,168,.35);color:var(--die)}
+.art-choice button.das{border-color:rgba(61,215,194,.35);color:var(--das)}
+.art-choice button.correct{background:rgba(52,201,138,.12);border-color:var(--ok);color:var(--ok)}
+.art-choice button.wrong{background:rgba(255,93,93,.12);border-color:var(--bad);color:var(--bad)}
+.art-choice button:disabled{cursor:default}
+
+.panel-intro{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--muted);font-size:14px;line-height:1.6}
+.panel-intro b{color:var(--text)}
+.rules{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:4px}
+.rules li{display:flex;gap:12px;align-items:flex-start}
+.rules li .n{font-family:var(--mono);font-size:12px;color:var(--accent);flex-shrink:0;padding-top:1px}
+.setup-spacer{flex:1;min-height:16px}
+
+.summary{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:6px}
+.summary .big{font-size:clamp(2.4rem,12vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.summary .sub{color:var(--muted);font-size:15px;margin-top:6px}
+.summary .promo{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.28);border-radius:12px;padding:12px 14px;margin:14px 0 0;font-size:13px;color:var(--text);line-height:1.5}
+.summary .promo b{color:var(--amber)}
+.result-grid{display:flex;gap:10px;margin:22px 0}
+.result-grid .r{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 8px}
+.result-grid .r .v{font-size:1.6rem;font-weight:800;letter-spacing:-.02em}
+.result-grid .r .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-top:6px}
+.trophy{font-size:56px;line-height:1;margin-bottom:4px;filter:drop-shadow(0 6px 22px rgba(163,116,255,.5))}
+.victory .big{color:var(--boss)}
+
+.search{width:100%;font-size:15px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px;outline:none;margin-bottom:16px}
+.search:focus{border-color:var(--accent)}
+.cat-group{margin-bottom:20px}
+.cat-group h3{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin-bottom:9px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.cat-group h3 .theme{color:var(--muted);text-transform:none;letter-spacing:.05em}
+.cat-group h3 .prog{color:var(--ok);font-weight:700}
+.vrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:6px 14px;padding:12px 2px;border-bottom:1px solid var(--line);align-items:baseline;position:relative;padding-right:16px}
+.vrow .de{font-size:1.05rem;font-weight:750;letter-spacing:-.01em;display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere;min-width:0}
+.vrow .de .art{font-family:var(--mono);font-size:10px;letter-spacing:.14em;font-weight:600}
+.vrow .de .art.der{color:var(--der)}
+.vrow .de .art.die{color:var(--die)}
+.vrow .de .art.das{color:var(--das)}
+.vrow .de .pl{font-family:var(--mono);font-size:10.5px;color:var(--muted2);font-weight:500}
+.vrow .tr{display:flex;flex-direction:column;gap:3px;min-width:0}
+.vrow .tr span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.vrow .tr span i{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.1em;color:var(--muted2);margin-right:8px}
+.vrow .tr span b{color:var(--text);font-weight:600}
+.vrow.mastered::after{content:"✓";position:absolute;right:0;top:12px;color:var(--ok);font-family:var(--mono);font-size:14px;font-weight:700}
+.empty{color:var(--muted2);text-align:center;padding:40px 0;font-family:var(--mono);font-size:13px}
+
+.about h2{font-size:1.6rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 12px}
+.about p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:12px}
+.about p b{color:var(--text)}
+.rankwall{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:16px 0 4px}
+.rankwall h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
+.rankwall .step{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.rankwall .step:last-child{border:none}
+.rankwall .step.done{color:var(--ok)}
+.rankwall .step .n{font-family:var(--mono);color:var(--muted2);font-size:12px}
+.rankwall .step.done .n{color:var(--ok)}
+.danger{background:rgba(255,93,93,.08);border:1px solid rgba(255,93,93,.3);border-radius:12px;padding:14px;margin-top:22px}
+.danger button{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--bad);padding:8px 0;text-transform:uppercase}
+
+#confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.conf{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(680deg);opacity:.9}}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-family:var(--mono);font-size:12px;color:var(--text);z-index:60;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;max-width:80%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+.levelup{position:fixed;inset:0;background:rgba(19,20,32,.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:70;padding:24px}
+.levelup.show{display:flex;animation:fade .3s ease}
+.levelup .card{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid rgba(163,116,255,.4);border-radius:20px;padding:30px 28px;text-align:center;max-width:360px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.levelup .card .medal{font-size:44px;margin-bottom:8px}
+.levelup .card .k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2)}
+.levelup .card .t{font-size:1.8rem;font-weight:800;letter-spacing:-.02em;margin:6px 0;background:linear-gradient(90deg,var(--amber),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.levelup .card p{color:var(--muted);font-size:14px;margin-bottom:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HOME ============ -->
+  <section class="screen active" id="screen-home">
+    <div class="brand">
+      <div class="kicker"><span class="dot"></span><span class="eyebrow" id="home-eyebrow">Deutsch · Verben &amp; Substantive</span></div>
+      <h1>Deu<em>tsch</em>.</h1>
+      <p>Master <b style="color:var(--text)">120 verbs</b> and <b style="color:var(--text)">1000 nouns</b>. From Alltag to Adorno — the vocabulary that carries German thought.</p>
+    </div>
+
+    <div class="rank">
+      <div class="row">
+        <div>
+          <div class="title">Rank</div>
+          <div class="name" id="rank-name">Anfänger</div>
+        </div>
+        <div class="xp"><b id="rank-xp">0</b>/1120<br><span id="rank-pct">0%</span></div>
+      </div>
+      <div class="bar"><div id="rank-bar" style="width:0%"></div></div>
+      <div class="next" id="rank-next">Next rank at <b>20 mastered</b>.</div>
+    </div>
+
+    <div class="tracks" id="tracks">
+      <button data-track="verbs" class="on">Verbs <span class="cnt">120</span></button>
+      <button data-track="nouns">Nouns <span class="cnt">1000</span></button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num" id="st-mastered">0<small>/120</small></div><div class="lbl">Mastered</div></div>
+      <div class="stat"><div class="num" id="st-streak">0</div><div class="lbl">Best streak</div></div>
+      <div class="stat beaten"><div class="num" id="st-boss">—</div><div class="lbl">Ultimate</div></div>
+    </div>
+
+    <div class="modes" id="modes-verbs">
+      <button class="mode" data-go="learn">
+        <span class="idx">01</span>
+        <span class="body"><span class="t">Learn</span><span class="d">Flip through flashcards — German on the front, three translations on the back.</span></span>
+        <span class="arw">→</span>
+      </button>
+      <button class="mode" data-go="drill-setup">
+        <span class="idx">02</span>
+        <span class="body"><span class="t">Drill</span><span class="d">Type the translation. Correct answers mark words as mastered.</span></span>
+        <span class="arw">→</span>
+      </button>
+      <button class="mode ultimate" data-go="ult-setup">
+        <span class="idx">03</span>
+        <span class="body"><span class="t">Ultimate <span class="medal">◆ boss</span></span><span class="d">All 120, no hints. Miss and it comes back. Beat the game.</span></span>
+        <span class="arw">→</span>
+      </button>
+    </div>
+
+    <div class="modes" id="modes-nouns" style="display:none">
+      <button class="mode" data-go="learn">
+        <span class="idx">01</span>
+        <span class="body"><span class="t">Learn</span><span class="d">Flashcards with article (der/die/das), plural and translations.</span></span>
+        <span class="arw">→</span>
+      </button>
+      <button class="mode" data-go="art-setup">
+        <span class="idx">02</span>
+        <span class="body"><span class="t">Article drill</span><span class="d">der · die · das — tap the right gender.</span></span>
+        <span class="arw">→</span>
+      </button>
+      <button class="mode" data-go="drill-setup">
+        <span class="idx">03</span>
+        <span class="body"><span class="t">Translation drill</span><span class="d">Type the meaning in your chosen language.</span></span>
+        <span class="arw">→</span>
+      </button>
+      <button class="mode ultimate" data-go="ult-setup">
+        <span class="idx">04</span>
+        <span class="body"><span class="t">Ultimate <span class="medal">◆ boss</span></span><span class="d">All 1000, no hints. Miss and it comes back.</span></span>
+        <span class="arw">→</span>
+      </button>
+    </div>
+
+    <div class="foot-link">
+      <button data-go="catalogue">Browse catalogue →</button>
+      <button data-go="about">About &amp; save</button>
+    </div>
+  </section>
+
+  <!-- ============ LEARN ============ -->
+  <section class="screen" id="screen-learn">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb" id="learn-crumb">Learn</span></div>
+    <div class="field-label" style="margin-top:0">Deck</div>
+    <div class="chips lvlgrid" id="learn-levels"></div>
+    <div class="deckbar" style="margin-top:20px">
+      <span class="counter"><b id="learn-pos">1</b> / <span id="learn-total">10</span></span>
+      <button class="btn btn-ghost btn-sm" id="learn-shuffle">⇄ Shuffle</button>
+    </div>
+    <div class="flip" id="flip">
+      <div class="flip-inner">
+        <div class="face front">
+          <span class="tag">DE</span><span class="badge" id="learn-badge"></span>
+          <div class="verb" id="learn-verb">—</div>
+          <div class="plural" id="learn-plural"></div>
+          <div class="hint">tap to reveal</div>
+        </div>
+        <div class="face back">
+          <span class="tag">Translations</span>
+          <div class="trans" id="learn-trans"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-ctrls">
+      <button class="btn btn-ghost nav-ic" id="learn-prev">←</button>
+      <button class="btn btn-primary" id="learn-flip">Flip</button>
+      <button class="btn btn-ghost nav-ic" id="learn-next">→</button>
+    </div>
+  </section>
+
+  <!-- ============ DRILL SETUP ============ -->
+  <section class="screen" id="screen-drill-setup">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb">Drill · setup</span></div>
+    <h1 style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em">Drill</h1>
+    <p style="color:var(--muted);margin-top:8px;font-size:14px;line-height:1.5">Type the translation. Correct answers mark words as <b style="color:var(--ok)">mastered</b>. Accents, articles and "to" are optional; synonyms count.</p>
+
+    <div class="field-label">Answer in</div>
+    <div class="seg" id="drill-lang">
+      <button data-v="en">English</button>
+      <button data-v="fr">Français</button>
+      <button data-v="pt">Português</button>
+      <button data-v="mixed" class="on">Mixed</button>
+    </div>
+
+    <div class="field-label">Deck</div>
+    <div class="seg lvlgrid" id="drill-scope"></div>
+
+    <div class="field-label">Focus</div>
+    <div class="seg" id="drill-focus">
+      <button data-v="all" class="on">All in deck</button>
+      <button data-v="new">Only unmastered</button>
+      <button data-v="review">Only mastered (review)</button>
+    </div>
+
+    <div class="setup-spacer"></div>
+    <button class="btn btn-primary" id="drill-start">Start drill →</button>
+  </section>
+
+  <!-- ============ ARTICLE SETUP ============ -->
+  <section class="screen" id="screen-art-setup">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb">Article · setup</span></div>
+    <h1 style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em">Article drill</h1>
+    <p style="color:var(--muted);margin-top:8px;font-size:14px;line-height:1.5">Tap the right article for each noun. Fast, focused, and the quickest way to make gender automatic.</p>
+    <div class="field-label">Deck</div>
+    <div class="seg lvlgrid" id="art-scope"></div>
+    <div class="setup-spacer"></div>
+    <button class="btn btn-primary" id="art-start">Start article drill →</button>
+  </section>
+
+  <!-- ============ ULTIMATE SETUP ============ -->
+  <section class="screen" id="screen-ult-setup">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb">Ultimate · boss</span></div>
+    <h1 style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em;color:var(--boss)">Ultimate</h1>
+    <div class="panel-intro" style="margin-top:16px">
+      <ul class="rules">
+        <li><span class="n">01</span><span>Every entry in this track (<b id="ult-count">120</b>) — no flashcards, no hints.</span></li>
+        <li><span class="n">02</span><span>Miss one and it <b>goes back in the deck</b>. It'll return until you get it.</span></li>
+        <li><span class="n">03</span><span>Clear every entry to <b>beat the game</b>. Accuracy and time are scored.</span></li>
+      </ul>
+    </div>
+    <div class="field-label">Answer in</div>
+    <div class="seg" id="ult-lang">
+      <button data-v="en">English</button>
+      <button data-v="fr">Français</button>
+      <button data-v="pt">Português</button>
+      <button data-v="mixed" class="on">Mixed</button>
+    </div>
+    <div class="setup-spacer"></div>
+    <button class="btn btn-primary" id="ult-start">Enter the boss run →</button>
+  </section>
+
+  <!-- ============ PLAY (drill + ultimate) ============ -->
+  <section class="screen" id="screen-play">
+    <div class="topbar"><button class="back" id="play-quit">← Quit</button><span class="spacer"></span><span class="crumb" id="play-crumb">Drill</span></div>
+    <div class="progress"><div class="bar" id="play-bar"></div></div>
+    <div class="playmeta">
+      <span id="play-count">0 / 0</span>
+      <span class="streak zero" id="play-streak">streak 0</span>
+    </div>
+    <div class="qcard">
+      <div class="q-ask">Translate to <b id="q-lang">—</b></div>
+      <div class="q-verb" id="q-verb">—</div>
+      <div class="q-sub" id="q-sub">German</div>
+      <input class="answer" id="q-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="type your answer" />
+      <div class="feedback" id="q-feedback"></div>
+    </div>
+    <div class="play-actions">
+      <button class="btn btn-primary" id="q-action">Check</button>
+      <button class="linkbtn" id="q-idk">I don't know this one</button>
+    </div>
+  </section>
+
+  <!-- ============ ARTICLE PLAY ============ -->
+  <section class="screen" id="screen-art-play">
+    <div class="topbar"><button class="back" id="art-quit">← Quit</button><span class="spacer"></span><span class="crumb" id="art-crumb">Article drill</span></div>
+    <div class="progress"><div class="bar" id="art-bar"></div></div>
+    <div class="playmeta">
+      <span id="art-count">0 / 0</span>
+      <span class="streak zero" id="art-streak">streak 0</span>
+    </div>
+    <div class="qcard">
+      <div class="q-ask">Which article?</div>
+      <div class="q-verb" id="art-word">—</div>
+      <div class="q-sub" id="art-sub">German noun</div>
+      <div class="art-choice" id="art-choices">
+        <button class="der" data-a="der">der</button>
+        <button class="die" data-a="die">die</button>
+        <button class="das" data-a="das">das</button>
+      </div>
+      <div class="feedback" id="art-feedback"></div>
+    </div>
+    <div class="play-actions">
+      <button class="btn btn-primary" id="art-next" style="display:none">Next →</button>
+    </div>
+  </section>
+
+  <!-- ============ SUMMARY (drill) ============ -->
+  <section class="screen" id="screen-summary">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb" id="sum-crumb">Drill · done</span></div>
+    <div class="summary">
+      <div class="big" id="sum-title">Nice.</div>
+      <div class="sub" id="sum-sub"></div>
+      <div class="result-grid">
+        <div class="r"><div class="v" id="sum-acc">0%</div><div class="k">Accuracy</div></div>
+        <div class="r"><div class="v" id="sum-correct">0</div><div class="k">Correct</div></div>
+        <div class="r"><div class="v" id="sum-streak">0</div><div class="k">Best run</div></div>
+      </div>
+      <div class="promo" id="sum-promo"></div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-ghost" id="sum-back">Change setup</button>
+        <button class="btn btn-primary" id="sum-again">Again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VICTORY (ultimate) ============ -->
+  <section class="screen victory" id="screen-victory">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb">Ultimate · cleared</span></div>
+    <div class="summary">
+      <div class="trophy">🏆</div>
+      <div class="big">Beaten.</div>
+      <div class="sub" id="vic-sub">You cleared them all. That's the boss down.</div>
+      <div class="result-grid">
+        <div class="r"><div class="v" id="vic-acc">0%</div><div class="k">Accuracy</div></div>
+        <div class="r"><div class="v" id="vic-time">0:00</div><div class="k">Time</div></div>
+        <div class="r"><div class="v" id="vic-streak">0</div><div class="k">Best streak</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-go="home">Home</button>
+        <button class="btn btn-primary" data-go="ult-setup">Run it again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CATALOGUE ============ -->
+  <section class="screen" id="screen-catalogue">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb" id="cat-crumb">Catalogue</span></div>
+    <input class="search" id="cat-search" type="text" placeholder="Filter (de / en / fr / pt)…" autocomplete="off" />
+    <div id="cat-list"></div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="screen about" id="screen-about">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="spacer"></span><span class="crumb">About</span></div>
+    <h2>Deutsch — verbs &amp; nouns</h2>
+    <p><b>The objective:</b> master all <b>1120 words</b> — 120 verbs and 1000 nouns — so you can translate any of them on sight. Each correct drill answer marks a word as mastered.</p>
+    <p><b>Nouns are weighted for the humanities:</b> Levels 1–10 are everyday high-frequency vocabulary; Levels 11–25 build the German philosophical vocabulary — being, mind, ethics, politics, aesthetics, knowledge, language, culture, religion, nature, phenomenology, critical theory, psychology, economy, theology.</p>
+    <p><b>Ranks</b> track your journey from Anfänger (0) to Philosoph (all 1120).</p>
+    <div class="rankwall" id="about-ranks"></div>
+    <div id="about-save" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.7"></div>
+    <div class="danger">
+      <div style="color:var(--text);font-size:14px;font-weight:600;margin-bottom:6px">Reset progress</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:8px">Wipes mastered lists, streaks and ultimate scores. This cannot be undone.</div>
+      <button id="about-reset">↺ Reset all progress</button>
+    </div>
+  </section>
+
+</div>
+<div id="confetti"></div>
+<div class="toast" id="toast"></div>
+<div class="levelup" id="levelup"><div class="card">
+  <div class="medal">◆</div>
+  <div class="k">Rank up</div>
+  <div class="t" id="lup-name">—</div>
+  <p id="lup-sub">—</p>
+  <button class="btn btn-primary" id="lup-ok">Continue →</button>
+</div></div>
+
+<script src="noun-data.js"></script>
+<script>
+/* ============================================================
+   DATA — VERBS (120) + NOUNS (1000)
+   ============================================================ */
+const VERBS = [
+ {de:"sein",     en:["be"],                         fr:["être"],                          pt:["ser","estar"]},
+ {de:"haben",    en:["have"],                        fr:["avoir"],                         pt:["ter","haver"]},
+ {de:"werden",   en:["become","get","turn into"],    fr:["devenir"],                       pt:["tornar-se","ficar","virar"]},
+ {de:"können",   en:["can","be able to"],            fr:["pouvoir"],                       pt:["poder","conseguir"]},
+ {de:"müssen",   en:["must","have to"],              fr:["devoir","falloir"],              pt:["ter que","precisar","dever"]},
+ {de:"sagen",    en:["say","tell"],                  fr:["dire"],                          pt:["dizer","falar"]},
+ {de:"machen",   en:["make","do"],                   fr:["faire"],                         pt:["fazer"]},
+ {de:"geben",    en:["give"],                        fr:["donner"],                        pt:["dar"]},
+ {de:"kommen",   en:["come"],                        fr:["venir"],                         pt:["vir"]},
+ {de:"sollen",   en:["should","ought to","be supposed to"], fr:["devoir"],                pt:["dever"]},
+ {de:"wollen",   en:["want","want to"],              fr:["vouloir"],                       pt:["querer"]},
+ {de:"gehen",    en:["go","walk"],                   fr:["aller"],                         pt:["ir","andar","caminhar"]},
+ {de:"wissen",   en:["know"],                        fr:["savoir"],                        pt:["saber"]},
+ {de:"sehen",    en:["see","look"],                  fr:["voir"],                          pt:["ver","enxergar"]},
+ {de:"lassen",   en:["let","leave","allow"],         fr:["laisser"],                       pt:["deixar"]},
+ {de:"stehen",   en:["stand","be standing"],         fr:["être debout","se tenir"],        pt:["estar de pé","ficar de pé"]},
+ {de:"finden",   en:["find","think"],                fr:["trouver"],                       pt:["encontrar","achar"]},
+ {de:"bleiben",  en:["stay","remain"],               fr:["rester"],                        pt:["ficar","permanecer"]},
+ {de:"liegen",   en:["lie","be located"],            fr:["être couché","se trouver"],      pt:["estar deitado","situar-se","jazer"]},
+ {de:"heißen",   en:["be called","be named"],        fr:["s'appeler"],                     pt:["chamar-se"]},
+ {de:"denken",   en:["think"],                       fr:["penser"],                        pt:["pensar"]},
+ {de:"nehmen",   en:["take"],                        fr:["prendre"],                       pt:["pegar","tomar"]},
+ {de:"tun",      en:["do"],                          fr:["faire"],                         pt:["fazer"]},
+ {de:"dürfen",   en:["may","be allowed to"],         fr:["pouvoir","avoir le droit"],      pt:["poder","ter permissão"]},
+ {de:"glauben",  en:["believe","think"],             fr:["croire"],                        pt:["acreditar","crer","achar"]},
+ {de:"halten",   en:["hold","stop","keep"],          fr:["tenir","arrêter"],               pt:["segurar","parar","manter"]},
+ {de:"nennen",   en:["name","call"],                 fr:["nommer","appeler"],              pt:["chamar","nomear"]},
+ {de:"mögen",    en:["like"],                        fr:["aimer","aimer bien"],            pt:["gostar"]},
+ {de:"zeigen",   en:["show","point"],                fr:["montrer"],                       pt:["mostrar"]},
+ {de:"führen",   en:["lead","guide"],                fr:["mener","conduire","diriger"],    pt:["conduzir","liderar","levar"]},
+ {de:"sprechen", en:["speak","talk"],                fr:["parler"],                        pt:["falar","conversar"]},
+ {de:"bringen",  en:["bring","take"],                fr:["apporter","amener"],             pt:["trazer","levar"]},
+ {de:"leben",    en:["live"],                        fr:["vivre"],                         pt:["viver","morar"]},
+ {de:"fahren",   en:["drive","go","travel"],         fr:["conduire","aller","rouler"],     pt:["dirigir","ir","viajar"]},
+ {de:"meinen",   en:["mean","think"],                fr:["penser","vouloir dire"],         pt:["achar","querer dizer","pensar"]},
+ {de:"fragen",   en:["ask"],                         fr:["demander"],                      pt:["perguntar"]},
+ {de:"kennen",   en:["know","be familiar with"],     fr:["connaître"],                     pt:["conhecer"]},
+ {de:"gelten",   en:["be valid","count","apply"],    fr:["valoir","être valable"],         pt:["valer","ser válido"]},
+ {de:"stellen",  en:["put","place","set"],           fr:["mettre","poser"],                pt:["colocar","pôr"]},
+ {de:"spielen",  en:["play"],                        fr:["jouer"],                         pt:["jogar","brincar","tocar"]},
+ {de:"arbeiten", en:["work"],                        fr:["travailler"],                    pt:["trabalhar"]},
+ {de:"brauchen", en:["need"],                        fr:["avoir besoin"],                  pt:["precisar","necessitar"]},
+ {de:"folgen",   en:["follow"],                      fr:["suivre"],                        pt:["seguir"]},
+ {de:"lernen",   en:["learn"],                       fr:["apprendre"],                     pt:["aprender"]},
+ {de:"verstehen",en:["understand"],                  fr:["comprendre"],                    pt:["entender","compreender"]},
+ {de:"setzen",   en:["set","put","sit"],             fr:["mettre","poser","asseoir"],      pt:["colocar","pôr","sentar"]},
+ {de:"bekommen", en:["get","receive"],               fr:["recevoir","obtenir"],            pt:["receber","obter","ganhar"]},
+ {de:"beginnen", en:["begin","start"],               fr:["commencer"],                     pt:["começar","iniciar"]},
+ {de:"erzählen", en:["tell","narrate"],              fr:["raconter"],                      pt:["contar","narrar"]},
+ {de:"versuchen",en:["try","attempt"],               fr:["essayer","tenter"],              pt:["tentar","experimentar"]},
+ {de:"schreiben",en:["write"],                       fr:["écrire"],                        pt:["escrever"]},
+ {de:"laufen",   en:["run","walk"],                  fr:["courir","marcher"],              pt:["correr","andar"]},
+ {de:"erklären", en:["explain"],                     fr:["expliquer"],                     pt:["explicar"]},
+ {de:"gehören",  en:["belong"],                      fr:["appartenir"],                    pt:["pertencer"]},
+ {de:"gewinnen", en:["win","gain"],                  fr:["gagner"],                        pt:["ganhar","vencer"]},
+ {de:"tragen",   en:["carry","wear"],                fr:["porter"],                        pt:["carregar","vestir","usar"]},
+ {de:"scheinen", en:["seem","shine","appear"],       fr:["sembler","briller","paraître"],  pt:["parecer","brilhar"]},
+ {de:"essen",    en:["eat"],                         fr:["manger"],                        pt:["comer"]},
+ {de:"lesen",    en:["read"],                        fr:["lire"],                          pt:["ler"]},
+ {de:"hören",    en:["hear","listen"],               fr:["entendre","écouter"],            pt:["ouvir","escutar"]},
+ {de:"warten",   en:["wait"],                        fr:["attendre"],                      pt:["esperar","aguardar"]},
+ {de:"suchen",   en:["search","look for","seek"],    fr:["chercher"],                      pt:["procurar","buscar"]},
+ {de:"treffen",  en:["meet","hit"],                  fr:["rencontrer","toucher"],          pt:["encontrar","atingir","acertar"]},
+ {de:"schaffen", en:["manage","create","accomplish"],fr:["réussir","créer","arriver à"],   pt:["conseguir","criar","realizar"]},
+ {de:"legen",    en:["lay","put"],                   fr:["poser","mettre"],                pt:["colocar","pôr","deitar"]},
+ {de:"ziehen",   en:["pull","move","draw"],          fr:["tirer","déménager"],             pt:["puxar","mudar-se","tirar"]},
+ {de:"handeln",  en:["act","deal","trade"],          fr:["agir","négocier"],               pt:["agir","negociar","tratar"]},
+ {de:"erreichen",en:["reach","achieve"],             fr:["atteindre"],                     pt:["alcançar","atingir"]},
+ {de:"erhalten", en:["receive","maintain","preserve"],fr:["recevoir","maintenir"],         pt:["receber","manter","obter"]},
+ {de:"entwickeln",en:["develop"],                    fr:["développer"],                    pt:["desenvolver"]},
+ {de:"erkennen", en:["recognize","realize"],         fr:["reconnaître"],                   pt:["reconhecer","perceber"]},
+ {de:"entstehen",en:["arise","emerge","come about"], fr:["naître","apparaître","se former"],pt:["surgir","originar-se","formar-se"]},
+ {de:"bestehen", en:["exist","consist","pass","insist"],fr:["exister","consister","réussir"],pt:["existir","consistir","passar"]},
+ {de:"entscheiden",en:["decide"],                    fr:["décider"],                       pt:["decidir"]},
+ {de:"öffnen",   en:["open"],                        fr:["ouvrir"],                        pt:["abrir"]},
+ {de:"schließen",en:["close","conclude","shut"],     fr:["fermer","conclure"],             pt:["fechar","concluir"]},
+ {de:"treten",   en:["step","kick","tread"],         fr:["marcher","donner un coup de pied"],pt:["pisar","chutar","entrar"]},
+ {de:"hoffen",   en:["hope"],                        fr:["espérer"],                       pt:["esperar","torcer"]},
+ {de:"fühlen",   en:["feel"],                        fr:["sentir","ressentir"],            pt:["sentir"]},
+ {de:"verlieren",en:["lose"],                        fr:["perdre"],                        pt:["perder"]},
+ {de:"kaufen",   en:["buy"],                         fr:["acheter"],                       pt:["comprar"]},
+ {de:"vergessen",en:["forget"],                      fr:["oublier"],                       pt:["esquecer"]},
+ {de:"verlassen",en:["leave","abandon"],             fr:["quitter","abandonner"],          pt:["deixar","abandonar"]},
+ {de:"erwarten", en:["expect","await"],              fr:["attendre","s'attendre"],         pt:["esperar","aguardar"]},
+ {de:"erscheinen",en:["appear","seem"],              fr:["apparaître","paraître"],         pt:["aparecer","surgir"]},
+ {de:"erfahren", en:["find out","experience","learn"],fr:["apprendre","éprouver"],         pt:["descobrir","saber","experimentar"]},
+ {de:"bilden",   en:["form","educate","make up"],    fr:["former"],                        pt:["formar","educar"]},
+ {de:"darstellen",en:["represent","depict","portray"],fr:["représenter","dépeindre"],      pt:["representar","retratar"]},
+ {de:"beschreiben",en:["describe"],                  fr:["décrire"],                       pt:["descrever"]},
+ {de:"wählen",   en:["choose","vote","dial"],        fr:["choisir","voter"],               pt:["escolher","votar","discar"]},
+ {de:"reden",    en:["talk","speak"],                fr:["parler"],                        pt:["falar","conversar"]},
+ {de:"schauen",  en:["look","watch"],                fr:["regarder"],                      pt:["olhar"]},
+ {de:"holen",    en:["fetch","get"],                 fr:["aller chercher","chercher"],     pt:["buscar","pegar","ir buscar"]},
+ {de:"sitzen",   en:["sit","be sitting"],            fr:["être assis","s'asseoir"],        pt:["estar sentado","sentar"]},
+ {de:"trinken",  en:["drink"],                       fr:["boire"],                         pt:["beber"]},
+ {de:"werfen",   en:["throw","cast"],                fr:["jeter","lancer"],                pt:["jogar","atirar","lançar"]},
+ {de:"wachsen",  en:["grow"],                        fr:["grandir","pousser","croître"],   pt:["crescer"]},
+ {de:"zahlen",   en:["pay"],                         fr:["payer"],                         pt:["pagar"]},
+ {de:"rechnen",  en:["calculate","count on","reckon"],fr:["calculer","compter"],           pt:["calcular","contar"]},
+ {de:"reichen",  en:["be enough","suffice","pass","reach"],fr:["suffire","passer","tendre"],pt:["bastar","chegar","passar"]},
+ {de:"sorgen",   en:["care","provide","worry"],      fr:["s'occuper","veiller","se soucier"],pt:["cuidar","garantir","preocupar-se"]},
+ {de:"verbinden",en:["connect","combine","link"],    fr:["relier","connecter","unir"],     pt:["conectar","ligar","unir"]},
+ {de:"verwenden",en:["use","employ"],                fr:["utiliser","employer"],           pt:["usar","utilizar","empregar"]},
+ {de:"bewegen",  en:["move"],                        fr:["bouger","déplacer","émouvoir"],  pt:["mover","mexer"]},
+ {de:"beobachten",en:["observe","watch"],            fr:["observer"],                      pt:["observar"]},
+ {de:"betrachten",en:["consider","view","regard"],   fr:["considérer","regarder"],         pt:["considerar","observar"]},
+ {de:"entdecken",en:["discover"],                    fr:["découvrir"],                     pt:["descobrir"]},
+ {de:"erinnern", en:["remember","remind"],           fr:["se rappeler","se souvenir","rappeler"],pt:["lembrar","recordar"]},
+ {de:"erlauben", en:["allow","permit"],              fr:["permettre","autoriser"],         pt:["permitir"]},
+ {de:"gelingen", en:["succeed","work out"],          fr:["réussir"],                       pt:["dar certo","conseguir","ter êxito"]},
+ {de:"passieren",en:["happen","occur"],              fr:["arriver","se passer"],           pt:["acontecer","ocorrer","passar"]},
+ {de:"ändern",   en:["change","alter","modify"],     fr:["changer","modifier"],            pt:["mudar","alterar"]},
+ {de:"steigen",  en:["rise","climb","increase"],     fr:["monter","augmenter"],            pt:["subir","aumentar"]},
+ {de:"unterstützen",en:["support"],                  fr:["soutenir","appuyer"],            pt:["apoiar","dar suporte","sustentar"]},
+ {de:"kämpfen",  en:["fight","struggle"],            fr:["combattre","se battre","lutter"],pt:["lutar","combater"]},
+ {de:"sterben",  en:["die"],                         fr:["mourir"],                        pt:["morrer"]},
+ {de:"vorstellen",en:["introduce","imagine","present"],fr:["présenter","imaginer"],        pt:["apresentar","imaginar"]},
+ {de:"funktionieren",en:["work","function"],         fr:["fonctionner","marcher"],         pt:["funcionar"]},
+ {de:"interessieren",en:["interest","be interested"],fr:["intéresser"],                    pt:["interessar"]},
+ {de:"studieren",en:["study"],                       fr:["étudier"],                       pt:["estudar"]},
+];
+
+/* NOUNS — 1000 entries, 25 levels of 40. Loaded from noun-data.js. */
+const NOUNS = (window.NOUNS_DATA || []).slice();
+const NOUN_LEVEL_STARTS = (window.NOUN_LEVELS && window.NOUN_LEVELS.starts) || null;
+
+const LEVEL_THEMES = {
+ verbs:[
+  "Sein · Haben · Werden","Modals & Motion","Cognition","Speech & Life","Work & Learning",
+  "Perception & Growth","Time & Trial","Existence & Choice","Emotion & Loss","Change & Struggle",
+  "Formation","Discovery"
+ ],
+ nouns:[
+  "Time & sequence","People & relations","Body & senses","Home, food, drink","Places & travel",
+  "Work, money, tools","Nature & weather","Actions & events","Number, shape, measure","Feelings & states",
+  "Being & metaphysics","Mind & consciousness","Ethics & value","Politics & society","Knowledge & truth",
+  "Language & meaning","Art & aesthetics","History & culture","Religion & myth","World & science",
+  "Phenomenology & hermeneutics","Critical theory & modernity","Psychology & inner life","Economy, law, justice","Metaphysical & theological"
+ ]
+};
+const LANG_NAME = {en:"English", fr:"French", pt:"Portuguese"};
+
+/* rank ladder */
+const RANKS = [
+  {name:"Anfänger",   min:0,   label:"Beginner"},
+  {name:"Schüler",    min:20,  label:"Student"},
+  {name:"Kenner",     min:100, label:"Connoisseur"},
+  {name:"Adept",      min:250, label:"Adept"},
+  {name:"Gelehrter",  min:500, label:"Scholar"},
+  {name:"Denker",     min:800, label:"Thinker"},
+  {name:"Meister",    min:1000,label:"Master"},
+  {name:"Philosoph",  min:1120,label:"Philosopher"}
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let TRACK = "verbs";
+const DATA = () => TRACK==="verbs" ? VERBS : NOUNS;
+const LEVEL_SIZE = () => TRACK==="verbs" ? 10 : 40;
+const LEVELS = () => Math.ceil(DATA().length / LEVEL_SIZE());
+const N = () => DATA().length;
+
+const KEY = "deutsch_app_v2";
+let store = load();
+function load(){ try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}} }
+function save(){ try{localStorage.setItem(KEY, JSON.stringify(store))}catch(e){} }
+function ensureStore(){
+  store.verbs = store.verbs || {mastered:{}, bestStreak:0, ultimate:null};
+  store.nouns = store.nouns || {mastered:{}, bestStreak:0, ultimate:null, articleBest:0};
+  store.rank = store.rank || 0;
+  if(localStorage.getItem("verben_v1") && !store._migrated){
+    try{
+      const old = JSON.parse(localStorage.getItem("verben_v1"))||{};
+      if(old.mastered) store.verbs.mastered = {...store.verbs.mastered, ...old.mastered};
+      if(old.bestStreak) store.verbs.bestStreak = Math.max(store.verbs.bestStreak, old.bestStreak);
+      if(old.ultimate) store.verbs.ultimate = store.verbs.ultimate || old.ultimate;
+      store._migrated = 1;
+      save();
+    }catch(e){}
+  }
+}
+ensureStore();
+function tstore(){ return store[TRACK]; }
+function totalMastered(){
+  return Object.keys(store.verbs.mastered).length + Object.keys(store.nouns.mastered).length;
+}
+function currentRank(){
+  const xp = totalMastered();
+  let r = 0;
+  for(let i=0;i<RANKS.length;i++) if(xp>=RANKS[i].min) r=i;
+  return r;
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $  = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+function norm(s){
+  return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/^(to|se|s|sich|être|etre|le|la|les|el|los|un|une|der|die|das|ein|eine|the|a|an|o|as|os)\s+/,"")
+    .replace(/[^a-z]/g,"");
+}
+function accepts(item, lang, guess){
+  const g = norm(guess);
+  if(!g) return false;
+  return item[lang].some(a=>norm(a)===g);
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+function markMastered(vi){
+  const s = tstore();
+  if(!s.mastered[vi]){
+    s.mastered[vi]=1; save();
+    checkRankUp();
+  }
+}
+function checkRankUp(){
+  const now = currentRank();
+  if(now > (store.rank||0)){
+    store.rank = now; save();
+    const r = RANKS[now];
+    $("#lup-name").innerHTML = `${r.name} <span style="font-size:.5em;color:var(--muted)">· ${r.label}</span>`;
+    $("#lup-sub").textContent = now===RANKS.length-1
+      ? "You've mastered every verb and noun. You are Philosoph."
+      : `Next: ${RANKS[now+1].name} at ${RANKS[now+1].min} mastered.`;
+    $("#levelup").classList.add("show");
+    confetti();
+  }
+}
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),1600);
+}
+$("#lup-ok").addEventListener("click", ()=>$("#levelup").classList.remove("show"));
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+function show(name){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  const target = document.getElementById("screen-"+name);
+  if(!target){ console.warn("screen not found:",name); return; }
+  target.classList.add("active");
+  const isBoss = name==="ult-setup" || (name==="play" && session && session.mode==="ultimate") || name==="victory";
+  document.body.classList.toggle("boss", isBoss);
+  window.scrollTo(0,0);
+  if(name==="home") renderHome();
+  if(name==="catalogue") renderCatalogue();
+  if(name==="about") renderAbout();
+  if(name==="drill-setup") renderDrillSetup();
+  if(name==="art-setup") renderArtSetup();
+  if(name==="ult-setup") renderUltSetup();
+}
+document.body.addEventListener("click", e=>{
+  const b = e.target.closest("[data-go]"); if(!b) return;
+  const g = b.dataset.go;
+  if(g==="learn"){ startLearn(); return; }
+  if(g==="drill-setup"){ document.body.classList.remove("boss"); show("drill-setup"); return; }
+  if(g==="art-setup"){ document.body.classList.remove("boss"); show("art-setup"); return; }
+  if(g==="ult-setup"){ document.body.classList.add("boss"); show("ult-setup"); return; }
+  document.body.classList.remove("boss");
+  show(g);
+});
+
+/* ============================================================
+   TRACK TOGGLE
+   ============================================================ */
+function setTrack(t){
+  TRACK = t;
+  document.body.classList.toggle("nouns", t==="nouns");
+  $$("#tracks button").forEach(b=>b.classList.toggle("on", b.dataset.track===t));
+  $("#modes-verbs").style.display = t==="verbs"?"flex":"none";
+  $("#modes-nouns").style.display = t==="nouns"?"flex":"none";
+  renderHome();
+}
+$$("#tracks button").forEach(b=>b.addEventListener("click", ()=>setTrack(b.dataset.track)));
+
+/* ============================================================
+   HOME
+   ============================================================ */
+function renderHome(){
+  const s = tstore();
+  $("#st-mastered").innerHTML = Object.keys(s.mastered).length + "<small>/"+N()+"</small>";
+  $("#st-streak").textContent = s.bestStreak;
+  $("#st-boss").textContent = s.ultimate ? s.ultimate.acc+"%" : "—";
+  $("#home-eyebrow").textContent = TRACK==="verbs" ? "Deutsch · 120 Verben" : "Deutsch · 1000 Substantive";
+  $("#ult-count").textContent = N();
+  // rank
+  const xp = totalMastered();
+  const ri = currentRank();
+  const r = RANKS[ri];
+  $("#rank-name").innerHTML = `<em>${r.name}</em> <span style="font-size:.65em;color:var(--muted2);font-weight:600">· ${r.label}</span>`;
+  $("#rank-xp").textContent = xp;
+  $("#rank-pct").textContent = Math.round(100*xp/1120)+"%";
+  $("#rank-bar").style.width = (100*xp/1120)+"%";
+  if(ri === RANKS.length-1){
+    $("#rank-next").innerHTML = "🏆 <b>All 1120 mastered. You are Philosoph.</b>";
+  } else {
+    const nxt = RANKS[ri+1];
+    $("#rank-next").innerHTML = `Next rank at <b>${nxt.min} mastered</b> — <b>${nxt.min - xp}</b> to go (${nxt.name}).`;
+  }
+}
+
+/* ============================================================
+   LEARN
+   ============================================================ */
+let learn = {level:0, order:[], pos:0};
+function startLearn(){
+  learn.level = 0;
+  buildLevelChips("#learn-levels", learn.level, setLearnLevel);
+  setLearnLevel(0);
+  $("#learn-crumb").textContent = "Learn · "+(TRACK==="verbs"?"verbs":"nouns");
+  show("learn");
+}
+function levelIndices(l){
+  const size = LEVEL_SIZE();
+  if(l===-1) return DATA().map((_,i)=>i);
+  const s=l*size; return DATA().map((_,i)=>i).slice(s,s+size);
+}
+function levelMasteredCount(l){
+  const idxs = levelIndices(l);
+  const m = tstore().mastered;
+  return idxs.filter(i=>m[i]).length;
+}
+function buildLevelChips(sel, cur, cb){
+  const box=$(sel); box.innerHTML="";
+  const total = LEVELS();
+  const themes = LEVEL_THEMES[TRACK];
+  for(let l=0;l<total;l++){
+    const b=document.createElement("button");
+    const mc = levelMasteredCount(l);
+    const sz = levelIndices(l).length;
+    const done = mc===sz;
+    b.className="chip"+(l===cur?" on":"")+(done?" done":"");
+    b.innerHTML="Lv "+(l+1)+`<span class="mast">${mc}/${sz}</span>`;
+    b.title = themes && themes[l] ? themes[l] : "";
+    b.onclick=()=>cb(l);
+    box.appendChild(b);
+  }
+  const all=document.createElement("button");
+  const totMc = Object.keys(tstore().mastered).length;
+  all.className="chip"+(cur===-1?" on":"");
+  all.innerHTML="All"+`<span class="mast">${totMc}/${N()}</span>`;
+  all.onclick=()=>cb(-1);
+  box.appendChild(all);
+}
+function setLearnLevel(l){
+  learn.level=l; learn.order=levelIndices(l); learn.pos=0;
+  buildLevelChips("#learn-levels", learn.level, setLearnLevel);
+  renderCard();
+}
+function renderCard(){
+  const flip=$("#flip"); flip.classList.remove("flipped");
+  const vi=learn.order[learn.pos]; const v=DATA()[vi];
+  const front = $("#learn-verb");
+  const plural = $("#learn-plural");
+  front.className = "verb" + (TRACK==="nouns" ? " "+v.art : "");
+  if(TRACK==="nouns"){
+    front.innerHTML = `<span class="art">${v.art}</span>${v.de}`;
+    plural.textContent = v.pl && v.pl!=="—" ? "pl. die "+v.pl : "(no plural)";
+  } else {
+    front.textContent = v.de;
+    plural.textContent = "";
+  }
+  const isMastered = tstore().mastered[vi];
+  $("#learn-badge").textContent = isMastered ? "✓ mastered" : "";
+  const t=$("#learn-trans"); t.innerHTML="";
+  ["en","fr","pt"].forEach(lg=>{
+    const row=document.createElement("div"); row.className="trow";
+    const alt = v[lg].length>1 ? ` <span class="alt">· ${v[lg].slice(1).join(", ")}</span>` : "";
+    row.innerHTML=`<span class="lg">${lg.toUpperCase()}</span><span class="w">${v[lg][0]}${alt}</span>`;
+    t.appendChild(row);
+  });
+  if(TRACK==="nouns" && v.pl && v.pl!=="—"){
+    const row=document.createElement("div"); row.className="trow pl";
+    row.innerHTML=`<span class="lg">PL</span><span class="w">die ${v.pl}</span>`;
+    t.appendChild(row);
+  }
+  $("#learn-pos").textContent=learn.pos+1;
+  $("#learn-total").textContent=learn.order.length;
+}
+$("#flip").addEventListener("click",()=>$("#flip").classList.toggle("flipped"));
+$("#learn-flip").addEventListener("click",e=>{e.stopPropagation();$("#flip").classList.toggle("flipped");});
+$("#learn-next").addEventListener("click",()=>{ learn.pos=(learn.pos+1)%learn.order.length; renderCard(); });
+$("#learn-prev").addEventListener("click",()=>{ learn.pos=(learn.pos-1+learn.order.length)%learn.order.length; renderCard(); });
+$("#learn-shuffle").addEventListener("click",()=>{ shuffle(learn.order); learn.pos=0; renderCard(); });
+
+/* ============================================================
+   DRILL SETUP
+   ============================================================ */
+let drillCfg={lang:"mixed",scope:"all",focus:"all"}, ultCfg={lang:"mixed"}, artCfg={scope:"all"};
+function wireSeg(id, onpick){
+  $$("#"+id+" button").forEach(b=>b.addEventListener("click",()=>{
+    $$("#"+id+" button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); if(onpick) onpick(b.dataset.v);
+  }));
+}
+wireSeg("drill-lang",v=>drillCfg.lang=v);
+wireSeg("ult-lang",v=>ultCfg.lang=v);
+wireSeg("drill-focus",v=>drillCfg.focus=v);
+function renderDrillSetup(){
+  const box=$("#drill-scope"); box.innerHTML="";
+  const total=LEVELS();
+  const themes = LEVEL_THEMES[TRACK];
+  for(let l=0;l<total;l++){
+    const b=document.createElement("button");
+    b.dataset.v=String(l);
+    const mc = levelMasteredCount(l), sz=levelIndices(l).length;
+    b.innerHTML="Lv "+(l+1)+`<span class="mast">${mc}/${sz}</span>`;
+    b.title = themes && themes[l] ? themes[l] : "";
+    b.onclick=()=>{ $$("#drill-scope button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); drillCfg.scope=b.dataset.v; };
+    box.appendChild(b);
+  }
+  const all=document.createElement("button");
+  all.dataset.v="all"; all.innerHTML="All "+N();
+  all.className="on"; drillCfg.scope="all";
+  all.onclick=()=>{ $$("#drill-scope button").forEach(x=>x.classList.remove("on")); all.classList.add("on"); drillCfg.scope="all"; };
+  box.appendChild(all);
+}
+function renderArtSetup(){
+  const box=$("#art-scope"); box.innerHTML="";
+  const total=Math.ceil(NOUNS.length/40);
+  for(let l=0;l<total;l++){
+    const b=document.createElement("button");
+    b.dataset.v=String(l); b.textContent="Lv "+(l+1);
+    b.onclick=()=>{ $$("#art-scope button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); artCfg.scope=b.dataset.v; };
+    box.appendChild(b);
+  }
+  const all=document.createElement("button");
+  all.dataset.v="all"; all.textContent="All "+NOUNS.length;
+  all.className="on"; artCfg.scope="all";
+  all.onclick=()=>{ $$("#art-scope button").forEach(x=>x.classList.remove("on")); all.classList.add("on"); artCfg.scope="all"; };
+  box.appendChild(all);
+}
+function renderUltSetup(){
+  $("#ult-count").textContent = N();
+}
+
+/* ============================================================
+   PLAY ENGINE (drill + ultimate)
+   ============================================================ */
+let session=null;
+function pickLang(setting){
+  return setting==="mixed" ? ["en","fr","pt"][Math.random()*3|0] : setting;
+}
+function makeItems(indices, langSetting){
+  return shuffle(indices.slice()).map(vi=>({vi, lang:pickLang(langSetting)}));
+}
+function filterIndices(indices, focus){
+  const m = tstore().mastered;
+  if(focus==="new") return indices.filter(i=>!m[i]);
+  if(focus==="review") return indices.filter(i=>m[i]);
+  return indices;
+}
+function startDrill(){
+  let indices = drillCfg.scope==="all" ? DATA().map((_,i)=>i) : levelIndices(parseInt(drillCfg.scope));
+  indices = filterIndices(indices, drillCfg.focus);
+  if(!indices.length){ toast("No words match that focus. Try another."); return; }
+  session={ track:TRACK, mode:"drill", queue:makeItems(indices,drillCfg.lang), idx:0,
+            total:indices.length, correct:0, attempts:0, streak:0, best:0, checked:false, lastOk:false,
+            newlyMastered:0 };
+  $("#play-crumb").textContent="Drill · "+(TRACK==="verbs"?"verbs":"nouns");
+  show("play"); renderQuestion();
+}
+function startUltimate(){
+  const indices=DATA().map((_,i)=>i);
+  session={ track:TRACK, mode:"ultimate", queue:makeItems(indices,ultCfg.lang),
+            cleared:new Set(), total:N(), correct:0, attempts:0, mistakes:0,
+            streak:0, best:0, start:Date.now(), checked:false, lastOk:false, newlyMastered:0 };
+  $("#play-crumb").textContent="Ultimate · "+(TRACK==="verbs"?"verbs":"nouns");
+  show("play"); renderQuestion();
+}
+function currentItem(){ return session.mode==="drill" ? session.queue[session.idx] : session.queue[0]; }
+function renderQuestion(){
+  session.checked=false;
+  const it=currentItem(); const v=DATA()[it.vi];
+  $("#q-lang").textContent = LANG_NAME[it.lang];
+  const qv = $("#q-verb");
+  if(session.track==="nouns"){
+    qv.innerHTML = `<span class="art">${v.art}</span>${v.de}`;
+  } else {
+    qv.textContent = v.de;
+  }
+  $("#q-sub").textContent = "German "+(session.track==="verbs"?"verb":"noun")+" · "+(session.mode==="ultimate"?"boss run":"drill");
+  const inp=$("#q-input"); inp.value=""; inp.className="answer"; inp.disabled=false;
+  $("#q-feedback").innerHTML="";
+  $("#q-action").textContent="Check";
+  $("#q-idk").style.display="block";
+  updatePlayMeta();
+  setTimeout(()=>inp.focus(),30);
+}
+function updatePlayMeta(){
+  let done, total, frac;
+  if(session.mode==="drill"){ done=session.idx; total=session.total; frac=done/total; }
+  else { done=session.cleared.size; total=session.total; frac=done/total; }
+  $("#play-count").textContent = done+" / "+total + (session.mode==="ultimate"?" cleared":"");
+  $("#play-bar").style.width=(frac*100)+"%";
+  const s=$("#play-streak"); s.textContent="streak "+session.streak;
+  s.classList.toggle("zero",session.streak===0);
+}
+function checkAnswer(){
+  if(session.checked) return nextQuestion();
+  const it=currentItem(); const v=DATA()[it.vi];
+  const inp=$("#q-input"); const ok=accepts(v,it.lang,inp.value);
+  session.attempts++; session.checked=true; session.lastOk=ok;
+  inp.disabled=true; inp.classList.add(ok?"ok":"bad");
+  $("#q-idk").style.display="none";
+  const fb=$("#q-feedback");
+  const all = ["en","fr","pt"].map(lg=>`${lg.toUpperCase()} ${v[lg][0]}`).join("   ·   ");
+  const s = tstore();
+  if(ok){
+    session.correct++; session.streak++; session.best=Math.max(session.best,session.streak);
+    if(session.streak>s.bestStreak){ s.bestStreak=session.streak; save(); }
+    const wasNew = !s.mastered[it.vi];
+    markMastered(it.vi);
+    if(wasNew) session.newlyMastered++;
+    if(session.mode==="ultimate") session.cleared.add(it.vi);
+    fb.innerHTML=`<span class="r-ok">✓ Correct${wasNew?' <span style="color:var(--amber)">+ mastered</span>':''}</span><span class="allt">${all}</span>`;
+  } else {
+    session.streak=0;
+    if(session.mode==="ultimate") session.mistakes++;
+    fb.innerHTML=`<span class="r-bad">✗ Not quite</span><span class="correct">${LANG_NAME[it.lang]}: <b>${v[it.lang][0]}</b></span><span class="allt">${all}</span>`;
+  }
+  $("#q-action").textContent = "Next →";
+  updatePlayMeta();
+  $("#q-action").focus();
+}
+function idk(){
+  if(session.checked) return;
+  session.checked=true; session.lastOk=false; session.attempts++;
+  const it=currentItem(); const v=DATA()[it.vi];
+  const inp=$("#q-input"); inp.disabled=true; inp.classList.add("bad");
+  $("#q-idk").style.display="none";
+  session.streak=0; if(session.mode==="ultimate") session.mistakes++;
+  const all = ["en","fr","pt"].map(lg=>`${lg.toUpperCase()} ${v[lg][0]}`).join("   ·   ");
+  $("#q-feedback").innerHTML=`<span class="correct">${LANG_NAME[it.lang]}: <b>${v[it.lang][0]}</b></span><span class="allt">${all}</span>`;
+  $("#q-action").textContent="Next →"; updatePlayMeta(); $("#q-action").focus();
+}
+function nextQuestion(){
+  if(session.mode==="drill"){
+    session.idx++;
+    if(session.idx>=session.queue.length) return finishDrill();
+    renderQuestion();
+  } else {
+    const it=session.queue.shift();
+    if(!session.lastOk){ it.lang = pickLang(ultCfg.lang); session.queue.push(it); }
+    if(session.queue.length===0) return finishUltimate();
+    renderQuestion();
+  }
+}
+function finishDrill(){
+  const acc = session.attempts? Math.round(100*session.correct/session.attempts):0;
+  $("#sum-acc").textContent=acc+"%";
+  $("#sum-correct").textContent=session.correct+"/"+session.total;
+  $("#sum-streak").textContent=session.best;
+  $("#sum-title").textContent = acc===100?"Flawless.": acc>=80?"Strong.": acc>=50?"Getting there.":"Keep going.";
+  $("#sum-sub").textContent = `${session.correct} of ${session.total} correct · best streak ${session.best}`;
+  const promo = $("#sum-promo");
+  const nm = session.newlyMastered;
+  const xp = totalMastered();
+  if(nm>0){
+    promo.style.display="block";
+    promo.innerHTML = `+ <b>${nm}</b> newly mastered — ${xp}/1120 on the road to Philosoph.`;
+  } else {
+    promo.style.display="none";
+  }
+  $("#sum-crumb").textContent = "Drill · done";
+  show("summary");
+}
+function finishUltimate(){
+  const secs=Math.round((Date.now()-session.start)/1000);
+  const mm=Math.floor(secs/60), ss=String(secs%60).padStart(2,"0");
+  const total=session.total;
+  const acc=Math.round(100*total/(total+session.mistakes));
+  $("#vic-acc").textContent=acc+"%";
+  $("#vic-time").textContent=mm+":"+ss;
+  $("#vic-streak").textContent=session.best;
+  $("#vic-sub").textContent = `You cleared all ${total} ${session.track}. That's the boss down.`;
+  const s = tstore();
+  const prev=s.ultimate;
+  if(!prev || acc>prev.acc){ s.ultimate={acc, time:mm+":"+ss}; }
+  save();
+  show("victory"); confetti();
+}
+$("#q-action").addEventListener("click",()=>{ session.checked?nextQuestion():checkAnswer(); });
+$("#q-idk").addEventListener("click",idk);
+$("#q-input").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); session.checked?nextQuestion():checkAnswer(); }});
+$("#play-quit").addEventListener("click",()=>{ if(confirm("Quit this run? Progress in it is lost.")) show("home"); });
+$("#drill-start").addEventListener("click",startDrill);
+$("#ult-start").addEventListener("click",startUltimate);
+$("#sum-again").addEventListener("click",()=>{ session.mode==="drill"?startDrill():startUltimate(); });
+$("#sum-back").addEventListener("click",()=>show("drill-setup"));
+
+/* ============================================================
+   ARTICLE DRILL
+   ============================================================ */
+let asession=null;
+function startArticle(){
+  const idxs = artCfg.scope==="all" ? NOUNS.map((_,i)=>i) : (function(){
+    const l=parseInt(artCfg.scope); return NOUNS.map((_,i)=>i).slice(l*40,l*40+40);
+  })();
+  asession={ queue:shuffle(idxs.slice()), idx:0, total:idxs.length,
+             correct:0, attempts:0, streak:0, best:0, checked:false };
+  $("#art-crumb").textContent="Article drill";
+  show("art-play"); renderArt();
+}
+function renderArt(){
+  asession.checked=false;
+  const vi=asession.queue[asession.idx]; const v=NOUNS[vi];
+  $("#art-word").textContent = v.de;
+  $("#art-sub").textContent = v.en[0];
+  $$("#art-choices button").forEach(b=>{ b.disabled=false; b.classList.remove("correct","wrong"); });
+  $("#art-feedback").innerHTML="";
+  $("#art-next").style.display="none";
+  const bar = $("#art-bar"); bar.style.width = (asession.idx/asession.total*100)+"%";
+  $("#art-count").textContent = asession.idx + " / " + asession.total;
+  const s=$("#art-streak"); s.textContent="streak "+asession.streak;
+  s.classList.toggle("zero", asession.streak===0);
+}
+$$("#art-choices button").forEach(b=>b.addEventListener("click", ()=>{
+  if(asession.checked) return;
+  asession.checked=true; asession.attempts++;
+  const vi=asession.queue[asession.idx]; const v=NOUNS[vi];
+  const pick = b.dataset.a; const ok = pick===v.art;
+  $$("#art-choices button").forEach(x=>{
+    x.disabled=true;
+    if(x.dataset.a===v.art) x.classList.add("correct");
+    else if(x===b) x.classList.add("wrong");
+  });
+  if(ok){
+    asession.correct++; asession.streak++; asession.best=Math.max(asession.best,asession.streak);
+    const s = store.nouns;
+    if(asession.streak>(s.articleBest||0)){ s.articleBest=asession.streak; save(); }
+    $("#art-feedback").innerHTML = `<span class="r-ok">✓ ${v.art} ${v.de}</span><span class="allt">${v.en[0]} · ${v.fr[0]} · ${v.pt[0]}</span>`;
+  } else {
+    asession.streak=0;
+    $("#art-feedback").innerHTML = `<span class="r-bad">✗ It's ${v.art} ${v.de}</span><span class="allt">${v.en[0]} · ${v.fr[0]} · ${v.pt[0]}</span>`;
+  }
+  $("#art-next").style.display="block";
+  $("#art-next").focus();
+}));
+$("#art-next").addEventListener("click", ()=>{
+  asession.idx++;
+  if(asession.idx>=asession.queue.length){
+    const acc = asession.attempts?Math.round(100*asession.correct/asession.attempts):0;
+    $("#sum-acc").textContent=acc+"%";
+    $("#sum-correct").textContent=asession.correct+"/"+asession.total;
+    $("#sum-streak").textContent=asession.best;
+    $("#sum-title").textContent = acc===100?"Flawless articles.": acc>=80?"Strong.": acc>=50?"Getting there.":"Keep going.";
+    $("#sum-sub").textContent = `${asession.correct} of ${asession.total} correct · best streak ${asession.best}`;
+    $("#sum-promo").style.display="none";
+    $("#sum-crumb").textContent = "Article drill · done";
+    show("summary");
+    return;
+  }
+  renderArt();
+});
+$("#art-quit").addEventListener("click", ()=>{ if(confirm("Quit this run?")) show("home"); });
+$("#art-start").addEventListener("click", startArticle);
+
+/* ============================================================
+   CATALOGUE
+   ============================================================ */
+function renderCatalogue(filter){
+  const q=norm(filter||"");
+  const raw=(filter||"").toLowerCase().trim();
+  const list=$("#cat-list"); list.innerHTML="";
+  $("#cat-crumb").textContent = "Catalogue · "+(TRACK==="verbs"?"120 verbs":"1000 nouns");
+  let any=false;
+  const total=LEVELS();
+  const themes = LEVEL_THEMES[TRACK];
+  const mastered = tstore().mastered;
+  for(let l=0;l<total;l++){
+    const idxs=levelIndices(l).filter(vi=>{
+      if(!raw) return true;
+      const v=DATA()[vi];
+      const pieces=[v.de,...v.en,...v.fr,...v.pt];
+      if(TRACK==="nouns"){ pieces.push(v.art, v.pl||""); }
+      const hay=pieces.join(" ").toLowerCase();
+      return hay.includes(raw) || norm(hay).includes(q);
+    });
+    if(!idxs.length) continue;
+    any=true;
+    const g=document.createElement("div"); g.className="cat-group";
+    const theme = themes && themes[l] ? `<span class="theme">${themes[l]}</span>` : "";
+    const mc = idxs.filter(i=>mastered[i]).length;
+    g.innerHTML=`<h3><span>Level ${l+1} ${theme}</span><span class="prog">${mc}/${idxs.length}</span></h3>`;
+    idxs.forEach(vi=>{
+      const v=DATA()[vi];
+      const row=document.createElement("div"); row.className="vrow"+(mastered[vi]?" mastered":"");
+      if(TRACK==="nouns"){
+        row.innerHTML=`<div class="de">
+            <span class="art ${v.art}">${v.art}</span>
+            <span>${v.de}</span>
+            ${v.pl && v.pl!=="—" ? `<span class="pl">pl. ${v.pl}</span>`:""}
+          </div>
+          <div class="tr">
+            <span><i>EN</i><b>${v.en[0]}</b>${v.en.length>1?", "+v.en.slice(1).join(", "):""}</span>
+            <span><i>FR</i><b>${v.fr[0]}</b>${v.fr.length>1?", "+v.fr.slice(1).join(", "):""}</span>
+            <span><i>PT</i><b>${v.pt[0]}</b>${v.pt.length>1?", "+v.pt.slice(1).join(", "):""}</span>
+          </div>`;
+      } else {
+        row.innerHTML=`<div class="de">${v.de}</div>
+          <div class="tr">
+            <span><i>EN</i><b>${v.en[0]}</b>${v.en.length>1?", "+v.en.slice(1).join(", "):""}</span>
+            <span><i>FR</i><b>${v.fr[0]}</b>${v.fr.length>1?", "+v.fr.slice(1).join(", "):""}</span>
+            <span><i>PT</i><b>${v.pt[0]}</b>${v.pt.length>1?", "+v.pt.slice(1).join(", "):""}</span>
+          </div>`;
+      }
+      g.appendChild(row);
+    });
+    list.appendChild(g);
+  }
+  if(!any) list.innerHTML=`<div class="empty">No entry matches “${(filter||"").trim()}”.</div>`;
+}
+$("#cat-search").addEventListener("input",e=>renderCatalogue(e.target.value));
+
+/* ============================================================
+   ABOUT / SAVE PANEL
+   ============================================================ */
+function renderAbout(){
+  const v=store.verbs, n=store.nouns;
+  const vm = v ? Object.keys(v.mastered).length : 0;
+  const nm = n ? Object.keys(n.mastered).length : 0;
+  const el = $("#about-save");
+  el.innerHTML =
+    `<div>verbs · <b style="color:var(--text)">${vm}/120 mastered</b> · streak ${v.bestStreak} · ultimate ${v.ultimate?v.ultimate.acc+"%":"—"}</div>
+     <div style="margin-top:6px">nouns · <b style="color:var(--text)">${nm}/1000 mastered</b> · streak ${n.bestStreak} · ultimate ${n.ultimate?n.ultimate.acc+"%":"—"} · article-run best ${n.articleBest||0}</div>`;
+  // ranks
+  const wall = $("#about-ranks");
+  const xp = totalMastered();
+  const cur = currentRank();
+  wall.innerHTML = "<h4>Rank ladder</h4>" + RANKS.map((r,i)=>{
+    const done = xp>=r.min;
+    return `<div class="step${done?' done':''}"><span>${done?'✓':(i===cur+1?'→':'·')} <b>${r.name}</b> <span style="color:var(--muted2);font-weight:500">${r.label}</span></span><span class="n">${r.min}</span></div>`;
+  }).join("");
+}
+$("#about-reset").addEventListener("click", ()=>{
+  if(!confirm("Wipe ALL progress? This can't be undone.")) return;
+  localStorage.removeItem(KEY);
+  localStorage.removeItem("verben_v1");
+  store={}; ensureStore(); save();
+  toast("Progress reset.");
+  renderAbout(); renderHome();
+});
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+function confetti(){
+  if(window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  const box=$("#confetti"); const cols=["#ffb020","#a374ff","#34c98a","#f3eee1","#3dd7c2"];
+  for(let i=0;i<90;i++){
+    const c=document.createElement("div"); c.className="conf";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=cols[i%cols.length];
+    c.style.animationDuration=(2.4+Math.random()*1.8)+"s";
+    c.style.animationDelay=(Math.random()*0.5)+"s";
+    c.style.opacity=0.85;
+    box.appendChild(c);
+    setTimeout(()=>c.remove(),4800);
+  }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+setTrack("verbs");
+renderHome();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>

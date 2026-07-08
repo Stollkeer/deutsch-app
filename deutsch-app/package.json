@@ -1,0 +1,19 @@
+{
+  "name": "deutsch-app",
+  "version": "1.0.0",
+  "description": "German verbs & nouns trainer — Capacitor Android build",
+  "private": true,
+  "scripts": {
+    "sync-www": "node scripts/sync-www.js",
+    "cap:sync": "npm run sync-www && npx cap sync android",
+    "cap:open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

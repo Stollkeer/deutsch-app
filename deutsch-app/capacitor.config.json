@@ -1,0 +1,14 @@
+{
+  "appId": "com.pedro31f.deutsch",
+  "appName": "Deutsch",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#131420FF"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
