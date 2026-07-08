@@ -1,4 +1,4 @@
- name: Build Deutsch APK
+name: Build Deutsch APK
 
   on:
     push:
@@ -31,7 +31,7 @@
         - name: Install npm deps
           working-directory: deutsch-app
           run: npm ci
-        - name: Sync web assets into Android project
+        - name: Sync web assets
           working-directory: deutsch-app
           run: npm run cap:sync
         - name: Make gradlew executable
@@ -45,4 +45,3 @@
           with:
             name: Deutsch-debug-apk
             path: deutsch-app/android/app/build/outputs/apk/debug/app-debug.apk
-            retention-days: 30
