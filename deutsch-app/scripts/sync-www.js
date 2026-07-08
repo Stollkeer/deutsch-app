@@ -45,9 +45,10 @@ function patchIndexForCapacitor(indexPath) {
   if (!fs.existsSync(indexPath)) return;
   let html = fs.readFileSync(indexPath, "utf8");
   const before = html;
-  // Match the whole SW registration block including its inner call.
+  // Match the whole SW registration block including its inner braces.
+  // Allows one level of nested {} (e.g. `.catch(()=>{})`).
   html = html.replace(
-    /if\s*\(\s*"serviceWorker"\s+in\s+navigator\s*\)\s*\{[\s\S]*?\}\s*/g,
+    /if\s*\(\s*"serviceWorker"\s+in\s+navigator\s*\)\s*\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}\s*/g,
     "/* service worker stripped for Android build */\n"
   );
   if (html !== before) {
