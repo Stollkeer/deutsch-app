@@ -29,3 +29,18 @@ Thumbs.db
 # Claude Code / MCP session data
 .claude/
 .playwright-mcp/
+
+# Merged app dev-only files
+merged/__pycache__/
+merged/data/
+merged/_deepseek.py
+
+# Playwright/dev screenshots
+*.png
+!deutsch-app/**/*.png
+!verben/**/*.png
+!merged/apple-touch-icon.png
+!merged/favicon.png
+!merged/icon-192.png
+!merged/icon-512.png
+!merged/icon-maskable-512.png

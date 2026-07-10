@@ -1,17 +1,25 @@
-// Copies the PWA in ../verben/ into ./www/ minus dev-only files.
+// Copies the merged polyglot PWA into ./www/ minus dev-only files.
 // Runs on every `npm run cap:sync` so the Android build always has the latest.
 
 const fs = require("fs");
 const path = require("path");
 
-const SRC = path.resolve(__dirname, "..", "..", "verben");
+const SRC = path.resolve(__dirname, "..", "..", "merged");
 const DST = path.resolve(__dirname, "..", "www");
 
 const SKIP = new Set([
   "__pycache__",
+  "data",              // dev-only source JSONs (already inlined into conjugations-*.js)
   "_build_nouns.py",
   "_finalize_nouns.py",
-  "sw.js",
+  "_build_shell.py",
+  "_build_verbs.py",
+  "_wrap_conj.py",
+  "_gen_conjugations.py",
+  "_deepseek.py",
+  "_adapt_html.py",
+  "SCHEMA.md",
+  "sw.js",             // service worker stripped for Android
 ]);
 
 function rmrf(p) {

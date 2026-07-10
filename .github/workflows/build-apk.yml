@@ -3,7 +3,7 @@
     push:
       paths:
         - 'deutsch-app/**'
-        - 'verben/**'
+        - 'merged/**'
         - '.github/workflows/build-apk.yml'
     workflow_dispatch:
   jobs:
