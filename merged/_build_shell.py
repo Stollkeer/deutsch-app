@@ -250,18 +250,15 @@ html = re.sub(
     html, count=1,
 )
 
-# Add small lang toggle to top of each screen? Put it in home topbar area.
-# We'll insert it into the home screen's topbar row.
-TOGGLE = '''<div class="lang-toggle" style="display:flex;gap:6px;margin-left:auto">
-  <button class="chip" id="lang-btn-de" onclick="chooseLang('de')">DE</button>
-  <button class="chip" id="lang-btn-fr" onclick="chooseLang('fr')">FR</button>
+# Persistent language switcher: fixed pill in the top-right, always visible.
+TOGGLE = '''<div id="lang-switch" role="radiogroup" aria-label="Idioma">
+  <button class="chip" id="lang-btn-de" role="radio" aria-checked="false" onclick="chooseLang('de')">DE</button>
+  <button class="chip" id="lang-btn-fr" role="radio" aria-checked="false" onclick="chooseLang('fr')">FR</button>
 </div>'''
-# Find the first topbar and append toggle before </div>
-# Actually simpler: add it to the home eyebrow area
-html = html.replace(
-    '<div class="eyebrow" id="home-eyebrow">',
-    TOGGLE + '\n<div class="eyebrow" id="home-eyebrow">',
-    1,
+html = re.sub(
+    r'(<body[^>]*>)',
+    r'\1\n' + TOGGLE,
+    html, count=1,
 )
 
 # ── 9. Init JS: language chooser handling ──
@@ -275,8 +272,8 @@ function chooseLang(lg){
   document.body.classList.toggle("lang-de", lg==="de");
   document.body.classList.toggle("lang-fr", lg==="fr");
   const de=document.getElementById("lang-btn-de"), fr=document.getElementById("lang-btn-fr");
-  if(de) de.classList.toggle("on", lg==="de");
-  if(fr) fr.classList.toggle("on", lg==="fr");
+  if(de){ de.classList.toggle("on", lg==="de"); de.setAttribute("aria-checked", lg==="de" ? "true" : "false"); }
+  if(fr){ fr.classList.toggle("on", lg==="fr"); fr.setAttribute("aria-checked", lg==="fr" ? "true" : "false"); }
   renderArtChoices();
   renderHome();
 }
@@ -648,7 +645,7 @@ html = html.replace(
     '        <span class="body"><span class="t">Ultimate <span class="medal">◆ boss</span></span><span class="d">Todos os 120, sem dicas. Errou volta pra pilha. Vence o jogo.</span></span>',
     '<button class="mode conjugation" data-go="conj-setup">\n'
     '        <span class="idx">03</span>\n'
-    '        <span class="body"><span class="t">Conjugação</span><span class="d">Presente, pretérito, subjuntivo, imperativo — treine as flexões.</span></span>\n'
+    '        <span class="body"><span class="t">Conjugação</span><span class="d">Flashcards das tabelas ou treino digitando — todos os tempos.</span></span>\n'
     '        <span class="arw">→</span>\n'
     '      </button>\n'
     '      <button class="mode ultimate" data-go="ult-setup">\n'
@@ -901,15 +898,47 @@ CONJ_SCREENS = '''
 <section class="screen" id="screen-conj-setup">
   <div class="topbar"><button class="back" data-go="home">← Início</button><span class="spacer"></span><span class="crumb">Conjugação</span></div>
   <div class="panel-intro">
-    <h2 style="font-size:1.4rem;font-weight:800;letter-spacing:-.01em;margin-bottom:8px">Treino de conjugação</h2>
-    <p style="color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:14px">Escolha um tempo verbal, ou treine todos.  Digite a flexão para a pessoa pedida.</p>
+    <h2 style="font-size:1.4rem;font-weight:800;letter-spacing:-.01em;margin-bottom:8px">Conjugação</h2>
+    <p style="color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:14px" id="conj-setup-sub">Aprenda com flashcards ou treine digitando. Escolha um tempo verbal, ou todos.</p>
+    <div id="conj-mode-choices" class="seg" style="gap:8px;margin-bottom:12px">
+      <button data-mode="learn">Aprender · flashcards</button>
+      <button data-mode="drill" class="on">Treinar · digitar</button>
+    </div>
     <div id="conj-tense-choices" class="seg" style="flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>
     <div id="conj-scope-choices" class="seg" style="gap:8px;margin-bottom:16px">
       <button data-scope="all" class="on">Todos os 150 verbos</button>
       <button data-scope="mastered">Dominados (revisão)</button>
       <button data-scope="unmastered">Só não dominados</button>
     </div>
-    <button class="btn btn-primary" id="conj-start">Começar treino →</button>
+    <button class="btn btn-primary" id="conj-start">Começar →</button>
+  </div>
+</section>
+
+<!-- ============ CONJUGATION LEARN (flashcards) ============ -->
+<section class="screen" id="screen-conj-learn">
+  <div class="topbar"><button class="back" id="conj-learn-quit">← Sair</button><span class="spacer"></span><span class="crumb" id="conj-learn-crumb">Aprender conjugação</span></div>
+  <div class="deckbar" style="margin-top:12px">
+    <span class="counter"><b id="conj-learn-pos">1</b> / <span id="conj-learn-total">1</span></span>
+    <button class="btn btn-ghost btn-sm" id="conj-learn-shuffle">⇄ Embaralhar</button>
+  </div>
+  <div class="flip" id="conj-flip">
+    <div class="flip-inner">
+      <div class="face front">
+        <span class="tag" id="conj-learn-tag">DE</span><span class="badge" id="conj-learn-badge"></span>
+        <div class="verb" id="conj-learn-verb">—</div>
+        <div class="plural" id="conj-learn-tensename"></div>
+        <div class="hint">toque para revelar a tabela</div>
+      </div>
+      <div class="face back">
+        <span class="tag" id="conj-learn-backtag">Conjugação</span>
+        <div class="trans" id="conj-learn-table" style="text-align:left;font-family:var(--mono);font-size:15px;line-height:1.75"></div>
+      </div>
+    </div>
+  </div>
+  <div class="flip-ctrls">
+    <button class="btn btn-ghost nav-ic" id="conj-learn-prev">←</button>
+    <button class="btn btn-primary" id="conj-learn-flip">Virar</button>
+    <button class="btn btn-ghost nav-ic" id="conj-learn-next">→</button>
   </div>
 </section>
 
@@ -947,8 +976,9 @@ CONJ_JS = '''
 /* ============================================================
    CONJUGATION GAME
    ============================================================ */
-let conjCfg = {tense:"all", scope:"all"};
+let conjCfg = {tense:"all", scope:"all", mode:"drill"};
 let conjSess = null;
+let conjLearnSess = null;
 function accentFold(s){ return (s||"").toString().toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").trim(); }
 function conjNorm(s){ return (s||"").toString().toLowerCase().normalize("NFC").trim(); }
 function renderConjSetup(){
@@ -958,8 +988,31 @@ function renderConjSetup(){
   box.innerHTML = `<button data-tense="all" class="on">Todos</button>` +
     tenses.map(t => `<button data-tense="${t.key}">${t.pt}</button>`).join("") +
     (LP().compoundTense ? `<button data-tense="${LP().compoundTense.key}">${LP().compoundTense.pt}</button>` : "");
-  conjCfg.tense = "all"; conjCfg.scope = "all";
+  conjCfg.tense = "all"; conjCfg.scope = "all"; conjCfg.mode = "drill";
   document.querySelectorAll("#conj-scope-choices button").forEach(b => b.classList.toggle("on", b.dataset.scope==="all"));
+  document.querySelectorAll("#conj-mode-choices button").forEach(b => b.classList.toggle("on", b.dataset.mode==="drill"));
+  const mc = document.getElementById("conj-mode-choices");
+  if(mc && !mc.dataset.wired){
+    mc.dataset.wired = "1";
+    mc.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-mode]"); if(!b) return;
+      mc.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      conjCfg.mode = b.dataset.mode;
+      const sc = document.getElementById("conj-scope-choices");
+      const sub = document.getElementById("conj-setup-sub");
+      const btn = document.getElementById("conj-start");
+      if(conjCfg.mode === "learn"){
+        if(sc) sc.style.display = "none";
+        if(sub) sub.textContent = "Flashcards: verbo + tempo na frente, tabela completa atrás. Percorra com ← →.";
+        if(btn) btn.textContent = "Abrir flashcards →";
+      } else {
+        if(sc) sc.style.display = "";
+        if(sub) sub.textContent = "Digite a flexão para a pessoa pedida. Certas viram cartas dominadas.";
+        if(btn) btn.textContent = "Começar treino →";
+      }
+    });
+  }
   // event delegation
   box.onclick = (e) => {
     const b = e.target.closest("button[data-tense]"); if(!b) return;
@@ -1032,6 +1085,7 @@ function buildConjQueue(){
   return cells.slice(0, cap);
 }
 function startConj(){
+  if(conjCfg.mode === "learn"){ startConjLearn(); return; }
   const queue = buildConjQueue();
   if(!queue.length){
     alert("Nada para treinar aqui. Escolha outro escopo.");
@@ -1040,6 +1094,62 @@ function startConj(){
   conjSess = {queue, idx:0, correct:0, attempts:0, streak:0, best:0, checked:false};
   document.getElementById("conj-crumb").textContent = "Conjugação · " + (conjCfg.tense==="all" ? "todos" : (LP().tenses.find(t=>t.key===conjCfg.tense)?.pt || LP().compoundTense?.pt || ""));
   show("conj-play"); renderConjCard();
+}
+function buildConjLearnQueue(){
+  // One card per (verb, tense). Simple-tense card = full table; compound-tense card = single form.
+  const conj = LP().conj || {};
+  const verbs = VERBS().map(v => v[LANG]).filter(v => conj[v]);
+  const compound = LP().compoundTense;
+  const cards = [];
+  for(const v of verbs){
+    const table = conj[v]; if(!table) continue;
+    const wantTense = conjCfg.tense;
+    if(wantTense === "all"){
+      for(const t of LP().tenses){
+        if(table[t.key]) cards.push({verb:v, tenseKey:t.key, tensePt:t.pt, persons:t.persons, cells:table[t.key], compound:false});
+      }
+      if(compound && table[compound.key]) cards.push({verb:v, tenseKey:compound.key, tensePt:compound.pt, persons:["—"], cells:{"—":table[compound.key]}, compound:true});
+    } else if(compound && wantTense === compound.key){
+      if(table[compound.key]) cards.push({verb:v, tenseKey:compound.key, tensePt:compound.pt, persons:["—"], cells:{"—":table[compound.key]}, compound:true});
+    } else {
+      const t = LP().tenses.find(x => x.key === wantTense);
+      if(t && table[t.key]) cards.push({verb:v, tenseKey:t.key, tensePt:t.pt, persons:t.persons, cells:table[t.key], compound:false});
+    }
+  }
+  return cards;
+}
+function shuffleInPlace(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function startConjLearn(){
+  const cards = buildConjLearnQueue();
+  if(!cards.length){ alert("Sem tabelas para mostrar. Escolha outro tempo."); return; }
+  conjLearnSess = {cards, idx:0};
+  document.getElementById("conj-learn-crumb").textContent = "Aprender · " + (conjCfg.tense==="all" ? "todos os tempos" : (LP().tenses.find(t=>t.key===conjCfg.tense)?.pt || LP().compoundTense?.pt || ""));
+  document.getElementById("conj-learn-tag").textContent = LANG.toUpperCase();
+  document.getElementById("conj-learn-backtag").textContent = "Conjugação";
+  document.getElementById("conj-learn-total").textContent = cards.length;
+  show("conj-learn"); renderConjLearnCard();
+}
+function renderConjLearnCard(){
+  if(!conjLearnSess) return;
+  const flip = document.getElementById("conj-flip");
+  flip.classList.remove("flipped");
+  const c = conjLearnSess.cards[conjLearnSess.idx];
+  document.getElementById("conj-learn-verb").textContent = c.verb;
+  document.getElementById("conj-learn-tensename").textContent = c.tensePt;
+  document.getElementById("conj-learn-pos").textContent = conjLearnSess.idx + 1;
+  // Build table
+  const rows = c.persons.map(p => {
+    const val = c.cells[p] || "—";
+    const label = p === "—" ? "particípio" : p;
+    return `<div style="display:flex;justify-content:space-between;gap:14px;padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.06)"><span style="color:var(--muted);min-width:70px">${label}</span><span style="color:var(--text);font-weight:600">${val}</span></div>`;
+  }).join("");
+  document.getElementById("conj-learn-table").innerHTML = rows;
+}
+function nextConjLearn(step){
+  if(!conjLearnSess) return;
+  const n = conjLearnSess.cards.length;
+  conjLearnSess.idx = (conjLearnSess.idx + step + n) % n;
+  renderConjLearnCard();
 }
 function renderConjCard(){
   if(!conjSess) return;
@@ -1107,6 +1217,15 @@ document.getElementById("conj-check")?.addEventListener("click", checkConj);
 document.getElementById("conj-skip")?.addEventListener("click", nextConj);
 document.getElementById("conj-quit")?.addEventListener("click", () => { if(confirm("Sair da rodada?")) show("home"); });
 document.getElementById("conj-input")?.addEventListener("keydown", (e) => { if(e.key==="Enter"){ e.preventDefault(); checkConj(); } });
+document.getElementById("conj-flip")?.addEventListener("click", () => document.getElementById("conj-flip").classList.toggle("flipped"));
+document.getElementById("conj-learn-flip")?.addEventListener("click", (e) => { e.stopPropagation(); document.getElementById("conj-flip").classList.toggle("flipped"); });
+document.getElementById("conj-learn-prev")?.addEventListener("click", (e) => { e.stopPropagation(); nextConjLearn(-1); });
+document.getElementById("conj-learn-next")?.addEventListener("click", (e) => { e.stopPropagation(); nextConjLearn(1); });
+document.getElementById("conj-learn-shuffle")?.addEventListener("click", () => {
+  if(!conjLearnSess) return;
+  shuffleInPlace(conjLearnSess.cards); conjLearnSess.idx = 0; renderConjLearnCard();
+});
+document.getElementById("conj-learn-quit")?.addEventListener("click", () => show("home"));
 '''
 # Insert conjugation JS just before the init block (before setTrack("verbs"); renderHome();)
 html = html.replace(
@@ -1126,6 +1245,15 @@ body.lang-de .mode.conjugation{background:linear-gradient(120deg,rgba(200,162,74
 body.lang-fr .mode.conjugation{background:linear-gradient(120deg,rgba(255,215,0,.12),rgba(0,85,164,.05));border-color:rgba(255,215,0,.4)}
 .feedback .bad{color:var(--bad)}
 .feedback .bad b{color:var(--text);font-weight:700}
+/* Persistent language switcher — fixed top-right on every screen */
+#lang-switch{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 10px);right:calc(env(safe-area-inset-right, 0px) + 10px);z-index:9500;display:flex;gap:0;background:rgba(12,14,18,.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:3px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+#lang-switch .chip{border:0;background:transparent;color:var(--muted);font:600 12px/1 var(--mono, ui-monospace, monospace);letter-spacing:.08em;padding:6px 12px;border-radius:999px;cursor:pointer;transition:background .18s, color .18s}
+#lang-switch .chip:hover{color:var(--text)}
+#lang-switch .chip.on{background:var(--accent);color:#0a0a0a}
+body.lang-de #lang-switch .chip.on{background:var(--accent, #c8a24a);color:#0a0a0a}
+body.lang-fr #lang-switch .chip.on{background:#ffd700;color:#003a7a}
+/* Nudge home eyebrow away from the switcher */
+#screen-home .brand{padding-right:88px}
 '''
 html = html.replace('</style>', CONJ_CSS + '</style>', 1)
 

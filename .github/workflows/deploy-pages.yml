@@ -3,7 +3,7 @@
     push:
       branches: [main]
       paths:
-        - 'verben/**'
+        - 'merged/**'
         - '.github/workflows/deploy-pages.yml'
     workflow_dispatch:
   permissions:
@@ -24,6 +24,6 @@
         - uses: actions/configure-pages@v5
         - uses: actions/upload-pages-artifact@v3
           with:
-            path: verben
+            path: merged
         - id: deployment
           uses: actions/deploy-pages@v4
