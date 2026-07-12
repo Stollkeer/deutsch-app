@@ -403,6 +403,64 @@ html = re.sub(
 # Replace the inline `${v.en[0]} · ${v.de[0]} · ${v.pt[0]}` in art-feedback with trInline
 html = html.replace('${v.en[0]} · ${v.de[0]} · ${v.pt[0]}', '${trInline(v)}')
 
+# ── 14b. Fix vocab learn renderCard: hardcoded ["en","de","pt"] crashes in DE mode ──
+# Root cause: in DE data, v.de is the headword STRING; calling .slice(1).join throws.
+# Also: front card tag and plural article are hard-coded — must be per-LANG.
+html = html.replace(
+    '<span class="tag">DE</span><span class="badge" id="learn-badge">',
+    '<span class="tag" id="learn-tag">DE</span><span class="badge" id="learn-badge">',
+)
+html = html.replace(
+    '''  front.className = "verb" + (TRACK==="nouns" ? " "+v.art : "");
+  if(TRACK==="nouns"){
+    front.innerHTML = `<span class="art">${v.art}</span>${head(v)}`;
+    plural.textContent = v.pl && v.pl!=="—" ? "pl. les "+v.pl : "(sem plural)";
+  } else {
+    front.textContent = head(v);
+    plural.textContent = "";
+  }
+  const isMastered = tstore().mastered[vi];
+  $("#learn-badge").textContent = isMastered ? "✓ dominado" : "";
+  const t=$("#learn-trans"); t.innerHTML="";
+  ["en","de","pt"].forEach(lg=>{
+    const row=document.createElement("div"); row.className="trow";
+    const alt = v[lg].length>1 ? ` <span class="alt">· ${v[lg].slice(1).join(", ")}</span>` : "";
+    row.innerHTML=`<span class="lg">${lg.toUpperCase()}</span><span class="w">${v[lg][0]}${alt}</span>`;
+    t.appendChild(row);
+  });
+  if(TRACK==="nouns" && v.pl && v.pl!=="—"){
+    const row=document.createElement("div"); row.className="trow pl";
+    row.innerHTML=`<span class="lg">PL</span><span class="w">die ${v.pl}</span>`;
+    t.appendChild(row);
+  }''',
+    '''  front.className = "verb" + (TRACK==="nouns" ? " "+v.art : "");
+  const plArt = LANG==="de" ? "die" : "les";
+  if(TRACK==="nouns"){
+    front.innerHTML = `<span class="art">${v.art}</span>${head(v)}`;
+    plural.textContent = v.pl && v.pl!=="—" ? "pl. "+plArt+" "+v.pl : "(sem plural)";
+  } else {
+    front.textContent = head(v);
+    plural.textContent = "";
+  }
+  const tagEl = document.getElementById("learn-tag");
+  if(tagEl) tagEl.textContent = LANG.toUpperCase();
+  const isMastered = tstore().mastered[vi];
+  $("#learn-badge").textContent = isMastered ? "✓ dominado" : "";
+  const t=$("#learn-trans"); t.innerHTML="";
+  LP().targets.forEach(lg=>{
+    const arr = v[lg] || [];
+    const row=document.createElement("div"); row.className="trow";
+    const alt = arr.length>1 ? ` <span class="alt">· ${arr.slice(1).join(", ")}</span>` : "";
+    row.innerHTML=`<span class="lg">${lg.toUpperCase()}</span><span class="w">${arr[0]||""}${alt}</span>`;
+    t.appendChild(row);
+  });
+  if(TRACK==="nouns" && v.pl && v.pl!=="—"){
+    const row=document.createElement("div"); row.className="trow pl";
+    row.innerHTML=`<span class="lg">PL</span><span class="w">${plArt} ${v.pl}</span>`;
+    t.appendChild(row);
+  }''',
+)
+
 # ── 15. Article widget: dynamic button set per LANG ──
 # Empty out the hard-coded le/la buttons; we'll fill them in JS.
 html = html.replace(

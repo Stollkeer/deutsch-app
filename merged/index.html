@@ -446,7 +446,7 @@ body.lang-fr #lang-switch .chip.on{background:#ffd700;color:#003a7a}
     <div class="flip" id="flip">
       <div class="flip-inner">
         <div class="face front">
-          <span class="tag">DE</span><span class="badge" id="learn-badge"></span>
+          <span class="tag" id="learn-tag">DE</span><span class="badge" id="learn-badge"></span>
           <div class="verb" id="learn-verb">—</div>
           <div class="plural" id="learn-plural"></div>
           <div class="hint">toque para revelar</div>
@@ -1142,25 +1142,29 @@ function renderCard(){
   const front = $("#learn-verb");
   const plural = $("#learn-plural");
   front.className = "verb" + (TRACK==="nouns" ? " "+v.art : "");
+  const plArt = LANG==="de" ? "die" : "les";
   if(TRACK==="nouns"){
     front.innerHTML = `<span class="art">${v.art}</span>${head(v)}`;
-    plural.textContent = v.pl && v.pl!=="—" ? "pl. les "+v.pl : "(sem plural)";
+    plural.textContent = v.pl && v.pl!=="—" ? "pl. "+plArt+" "+v.pl : "(sem plural)";
   } else {
     front.textContent = head(v);
     plural.textContent = "";
   }
+  const tagEl = document.getElementById("learn-tag");
+  if(tagEl) tagEl.textContent = LANG.toUpperCase();
   const isMastered = tstore().mastered[vi];
   $("#learn-badge").textContent = isMastered ? "✓ dominado" : "";
   const t=$("#learn-trans"); t.innerHTML="";
-  ["en","de","pt"].forEach(lg=>{
+  LP().targets.forEach(lg=>{
+    const arr = v[lg] || [];
     const row=document.createElement("div"); row.className="trow";
-    const alt = v[lg].length>1 ? ` <span class="alt">· ${v[lg].slice(1).join(", ")}</span>` : "";
-    row.innerHTML=`<span class="lg">${lg.toUpperCase()}</span><span class="w">${v[lg][0]}${alt}</span>`;
+    const alt = arr.length>1 ? ` <span class="alt">· ${arr.slice(1).join(", ")}</span>` : "";
+    row.innerHTML=`<span class="lg">${lg.toUpperCase()}</span><span class="w">${arr[0]||""}${alt}</span>`;
     t.appendChild(row);
   });
   if(TRACK==="nouns" && v.pl && v.pl!=="—"){
     const row=document.createElement("div"); row.className="trow pl";
-    row.innerHTML=`<span class="lg">PL</span><span class="w">die ${v.pl}</span>`;
+    row.innerHTML=`<span class="lg">PL</span><span class="w">${plArt} ${v.pl}</span>`;
     t.appendChild(row);
   }
   $("#learn-pos").textContent=learn.pos+1;
