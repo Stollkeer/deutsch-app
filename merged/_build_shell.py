@@ -526,7 +526,7 @@ html = html.replace(
 )
 html = html.replace(
     '  renderHome();\n}\ndocument.querySelectorAll("[data-lang-pick]")',
-    '  renderArtChoices();\n  renderHome();\n}\ndocument.querySelectorAll("[data-lang-pick]")',
+    '  renderAnswerLangs();\n  renderHome();\n}\ndocument.querySelectorAll("[data-lang-pick]")',
     1,
 )
 
@@ -1314,6 +1314,93 @@ body.lang-fr #lang-switch .chip.on{background:#ffd700;color:#003a7a}
 #screen-home .brand{padding-right:88px}
 '''
 html = html.replace('</style>', CONJ_CSS + '</style>', 1)
+
+# ── 16h. Answer-language: strip hard-coded target lists, drive from LP().targets ──
+# Root cause: the FR source hard-codes ["en","de","pt"] as the "answer in" set
+# (and matching drill/ult button rows). In DE mode that would ask the user to
+# translate Deutsch → Deutsch. All target lists must come from LP().targets.
+#
+# 16h.1 — LANG_NAME: add "fr" so labels resolve when DE mode picks a FR target.
+html = html.replace(
+    'const LANG_NAME = {en:"inglês", de:"alemão", pt:"português"};',
+    'const LANG_NAME = {en:"inglês", de:"alemão", fr:"francês", pt:"português"};',
+    1,
+)
+
+# 16h.2 — pickLang: draw from LP().targets, and snap stale saved settings
+# ("de" while LANG=de) to "mixed" instead of crashing accepts().
+html = html.replace(
+    'function pickLang(setting){\n'
+    '  return setting==="mixed" ? ["en","de","pt"][Math.random()*3|0] : setting;\n'
+    '}',
+    'function pickLang(setting){\n'
+    '  const opts = LP().targets;\n'
+    '  // Guard against a stale setting (e.g. cfg saved as "de" then LANG switched to DE).\n'
+    '  if(setting !== "mixed" && !opts.includes(setting)) setting = "mixed";\n'
+    '  return setting==="mixed" ? opts[Math.random()*opts.length|0] : setting;\n'
+    '}',
+    1,
+)
+
+# 16h.3 — feedback "all translations" strip (both in checkAnswer and idk).
+# In DE mode v.de is the headword STRING, not an array; v.de[0] returns 'Z'.
+html = html.replace(
+    '  const all = ["en","de","pt"].map(lg=>`${lg.toUpperCase()} ${v[lg][0]}`).join("   ·   ");',
+    '  const all = LP().targets.map(lg=>`${lg.toUpperCase()} ${(v[lg]||[])[0]||""}`).join("   ·   ");',
+)
+
+# 16h.4 — feedback correct-answer bold: defensive against non-array item[it.lang].
+html = html.replace('<b>${v[it.lang][0]}</b>', '<b>${(v[it.lang]||[])[0]||""}</b>')
+
+# 16h.5 — catalogue search filter: pieces spread must come from LP().targets, not
+# a hardcoded set. In DE mode `...v.de` spreads a string into characters.
+# The FR source is `[v.fr,...v.en,...v.de,...v.pt]`; by this point v.fr has
+# already been rewritten to head(v) (§13).
+html = html.replace(
+    'const pieces=[head(v),...v.en,...v.de,...v.pt];',
+    'const pieces=[head(v),...LP().targets.flatMap(t=>v[t]||[])];',
+    1,
+)
+
+# 16h.6 — drill-lang / ult-lang seg widgets: kill the static button rows and
+# rebuild them per-LANG from LP().targets. The wireSeg calls for these two segs
+# also go — renderAnswerLangs re-binds after each rebuild.
+for _seg_id in ("drill-lang", "ult-lang"):
+    html = html.replace(
+        f'<div class="seg" id="{_seg_id}">\n'
+        f'      <button data-v="en">English</button>\n'
+        f'      <button data-v="de">Deutsch</button>\n'
+        f'      <button data-v="pt">Português</button>\n'
+        f'      <button data-v="mixed" class="on">Mixed</button>\n'
+        f'    </div>',
+        f'<div class="seg" id="{_seg_id}"></div>',
+        1,
+    )
+
+html = html.replace(
+    'wireSeg("drill-lang",v=>drillCfg.lang=v);\n'
+    'wireSeg("ult-lang",v=>ultCfg.lang=v);\n'
+    'wireSeg("drill-focus",v=>drillCfg.focus=v);',
+    'wireSeg("drill-focus",v=>drillCfg.focus=v);\n'
+    '// Answer-language segs are dynamic per LANG — the user must never be asked\n'
+    '// to translate into the headword language (e.g. "Deutsch" in DE mode).\n'
+    'function renderAnswerLangs(){\n'
+    '  const opts = LP().targets;\n'
+    '  const labels = {en:"English", de:"Deutsch", fr:"Français", pt:"Português"};\n'
+    '  const build = (id, cfg) => {\n'
+    '    const box = document.getElementById(id); if(!box) return;\n'
+    '    if(cfg.lang !== "mixed" && !opts.includes(cfg.lang)) cfg.lang = "mixed";\n'
+    '    const parts = opts.map(t => `<button data-v="${t}"${cfg.lang===t?\' class="on"\':\'\'}>${labels[t]||t.toUpperCase()}</button>`);\n'
+    '    parts.push(`<button data-v="mixed"${cfg.lang==="mixed"?\' class="on"\':\'\'}>Mixed</button>`);\n'
+    '    box.innerHTML = parts.join("");\n'
+    '  };\n'
+    '  build("drill-lang", drillCfg);\n'
+    '  build("ult-lang",   ultCfg);\n'
+    '  wireSeg("drill-lang", v => drillCfg.lang = v);\n'
+    '  wireSeg("ult-lang",   v => ultCfg.lang   = v);\n'
+    '}',
+    1,
+)
 
 # ── 17. Bump service worker cache name ──
 try:
